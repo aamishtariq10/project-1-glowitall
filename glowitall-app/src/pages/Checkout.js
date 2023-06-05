@@ -13,12 +13,12 @@ import createAnOrder from '../features/users/userSlice';
 
 const shippingSchema = yup.object({
  firstName: yup.string().required("First Name is Required"),
- lasttName: yup.string().required("Last Name is Required"),
+ lastName: yup.string().required("Last Name is Required"),
  address: yup.string().required("Address Details are Required"),
  state: yup.string().required("State is Required"),
  city: yup.string().required("City is Required"),
  country: yup.string().required("Country is Required"),
- pincode: yup.string().required("Pincode is Required"),
+ pincode: yup.number().required("Pincode is Required"),
 
 });
 
@@ -52,6 +52,7 @@ const Checkout = () => {
     },
     validationSchema:shippingSchema,
     onSubmit: (values) => {
+      console.log(values)
       alert(JSON.stringify(values));
       setShippingInfo(values);
       setTimeout(()=>{

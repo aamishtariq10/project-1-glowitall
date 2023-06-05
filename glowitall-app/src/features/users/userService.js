@@ -16,54 +16,39 @@ const verifyOTP = async (userData) => {
 const login = async (userData) => {
   const response = await axios.post(`${base_url}user/login`, userData);
   if (response.data) {
-     localStorage.setItem("userToken", JSON.stringify(response.data.userToken));
+    localStorage.setItem("userToken", JSON.stringify(response.data.userToken));
     return response.data;
   }
 };
 const getUserWishlist = async () => {
-  const header = localStorage.getItem("userToken");
-  const response = await axios.get(`${base_url}user/wishlist`, {
-    headers: {
-      userToken: header,
-    },
-  });
+  //  const header = localStorage.getItem("userToken");
+  const response = await axios.get(`${base_url}user/wishlist`, config);
   if (response.data) {
     return response.data;
   }
 };
 const addToCart = async (cartData) => {
-  const header = localStorage.getItem("userToken");
-  const response = await axios.post(`${base_url}user/cart`, cartData, {
-    headers: {
-      userToken: header,
-    },
-  });
+  // const header = localStorage.getItem("userToken");
+  console.log(config);
+  const response = await axios.post(`${base_url}user/cart`, cartData, config);
   if (response.data) {
     return response.data;
   }
 };
 
 const getCart = async () => {
-  const header = localStorage.getItem("userToken");
-  const response = await axios.get(`${base_url}user/cart`, {
-    headers: {
-      userToken: header,
-    },
-  });
+  // const header = localStorage.getItem("userToken");
+  console.log("get cart token issue", config);
+  const response = await axios.get(`${base_url}user/cart`, config);
   if (response.data) {
     return response.data;
   }
 };
 
 const removeProductFromCart = async (cartItemId) => {
-  const header = localStorage.getItem("userToken");
   const response = await axios.delete(
     `${base_url}user/delete-product-cart/${cartItemId}`,
-    {
-      headers: {
-        userToken: `${header}`,
-      },
-    }
+    config
   );
   if (response.data) {
     return response.data;
@@ -71,14 +56,9 @@ const removeProductFromCart = async (cartItemId) => {
 };
 
 const updateProductFromCart = async (cartDetail) => {
-  const header = localStorage.getItem("userToken");
   const response = await axios.delete(
     `${base_url}user/update-product-cart/${cartDetail.cartItemId}/${cartDetail.newQuantity}`,
-    {
-      headers: {
-        userToken: `${header}`,
-      },
-    }
+    config
   );
   if (response.data) {
     return response.data;
@@ -86,15 +66,10 @@ const updateProductFromCart = async (cartDetail) => {
 };
 
 const createOrder = async (orderDetail) => {
-  const header = localStorage.getItem("userToken");
   const response = await axios.post(
     `${base_url}user/cart/create-order`,
     orderDetail,
-    {
-      headers: {
-        userToken: `${header}`,
-      },
-    }
+    config
   );
   if (response.data) {
     return response.data;
@@ -109,13 +84,7 @@ const getUserOrders = async () => {
 };
 
 const updateUser = async (data) => {
-  const header = localStorage.getItem("userToken");
-  const response = await axios.put(`${base_url}user/edit-user`, data, {
-    headers: {
-      userToken: `${header}`,
-    },
-  });
-
+  const response = await axios.put(`${base_url}user/edit-user`, data, config);
   if (response.data) {
     return response.data;
   }

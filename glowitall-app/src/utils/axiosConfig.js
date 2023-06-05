@@ -1,11 +1,11 @@
 export const base_url = "http://localhost:5000/api/";
 
-const getTokenFromLocalStorage = localStorage.getItem("userToken")
-    ? localStorage.getItem("userToken") : null;
+const token = localStorage.getItem("token");
 
 export const config = {
     headers: {
-        "userToken": `${getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""}`,
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
         Accept: "application/json",
-    }
+      }
 };
