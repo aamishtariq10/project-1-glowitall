@@ -1,0 +1,2324 @@
+{
+	"info": {
+		"_postman_id": "eb6894d3-84da-426e-97f2-2f922a87ddd5",
+		"name": "GlowItAll",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register a User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\": \"Ahmad\",\r\n    \"lastname\": \"Ashfaq\",\r\n    \"email\": \"ahmad@gmail.com\",\r\n    \"password\": \"12345aa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/register",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\": \"Abdullah\",\r\n    \"lastname\": \"Ashfaq\",\r\n    \"email\": \"abdullah@gmail.com\",\r\n    \"password\": \"12345aa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/login",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/user/all-users",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"all-users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTIzNTg2NSwiZXhwIjoxNjgxMzIyMjY1fQ.FQU0eTT5joDKdeOOGlLCIiX4SRHVGOBbpAtxahiiL-c",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/user/63f8b02b4c5c577a1f3b2dbc",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"63f8b02b4c5c577a1f3b2dbc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmViNWZhOGUzYzgzNjEwZWY4YWQ3YSIsImlhdCI6MTY4MDg2MzE0OSwiZXhwIjoxNjgwOTQ5NTQ5fQ.dgsIcFx7MQz5JHuEZuNpuLnYYwj2enebtiTM-mQvyFs",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"lastname\": \"Ali\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/edit-user/63f8b02b4c5c577a1f3b2dbc",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"edit-user",
+								"63f8b02b4c5c577a1f3b2dbc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/user/640c4d83521f616641368bc6",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"640c4d83521f616641368bc6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRlMTJkMDY1MTFkNDZhOGYxM2ZhNSIsImlhdCI6MTY3ODYzMTIyMSwiZXhwIjoxNjc4NzE3NjIxfQ.6XXk1_yaTdS3T7QcgoU34fLjtSPtt8ZanFEu3kaVSss",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/user/refresh",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRhNzMxYzdiMTE5N2MxZTYxNDdhNCIsImlhdCI6MTY3ODYyOTkxMiwiZXhwIjoxNjc4NzE2MzEyfQ.7umUa5QgiIB9T7GxlifuH6D2O2U5Vr2Cl8bcZDcb1fY",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"kainat@gmail.com\",\r\n    \"password\": \"12yz\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/password/640c5262fbad577e897e33d8",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"password",
+								"640c5262fbad577e897e33d8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstname\": \"Ayesha\",\r\n    \"lastname\": \"Mariyam\",\r\n    \"email\": \"amariyam@gmail.com\",\r\n    \"password\": \"12345am\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/forgot-password-token",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"forgot-password-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password Token",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmViNWZhOGUzYzgzNjEwZWY4YWQ3YSIsImlhdCI6MTY4MDg2MzE0OSwiZXhwIjoxNjgwOTQ5NTQ5fQ.dgsIcFx7MQz5JHuEZuNpuLnYYwj2enebtiTM-mQvyFs",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ahmad@gmail.com\",\r\n    \"password\": \"12345aa\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/reset-password-token/e876bc930eb807165eca79c340e3d4e9761275d5b860335bfa4d34ca33e9214f",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"reset-password-token",
+								"e876bc930eb807165eca79c340e3d4e9761275d5b860335bfa4d34ca33e9214f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"kashfaq@gmail.com\",\r\n    \"password\": \"kainat123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/admin-login",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"admin-login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Wishlist",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTE0MGI3N2EwYzZiOTc0MWE4ZDJmYiIsImlhdCI6MTY4NDE2NDMzNywiZXhwIjoxNjg0MjUwNzM3fQ.ggNL2GTb0Oz70ogsrOlWsaPRnnQbdjczL8oZaoDmDE8",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/user/wishlist/645140b77a0c6b9741a8d2fb",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"wishlist",
+								"645140b77a0c6b9741a8d2fb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save User Address",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmViNWZhOGUzYzgzNjEwZWY4YWQ3YSIsImlhdCI6MTY4MTIzNjUwMywiZXhwIjoxNjgxMzIyOTAzfQ.b8B13FX_VF95mhgQjhtbvsibFTtyETbbfsseTlaSMO4",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"address\": \"My address\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/save-address",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"save-address"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzA3OTk1OGNmMDY5ZmVmZWU3YmRkZiIsImlhdCI6MTY4NDI2ODk0NywiZXhwIjoxNjg0MzU1MzQ3fQ.9-zJw55Oh5WGPp9GXVpyVg_yVSr1TrDTElMgkx48hjM",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\":\"64496d94aa32ea1a72830ae6\",\r\n    \"price\":\"1500\",\r\n    \"quantity\":\"2\",\r\n    \"color\":[\"64496bdeaa32ea1a72830ad4\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/cart",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cart",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmViNWZhOGUzYzgzNjEwZWY4YWQ3YSIsImlhdCI6MTY4MTIzNjUwMywiZXhwIjoxNjgxMzIyOTAzfQ.b8B13FX_VF95mhgQjhtbvsibFTtyETbbfsseTlaSMO4",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/user/cart",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Empty Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmViNWZhOGUzYzgzNjEwZWY4YWQ3YSIsImlhdCI6MTY4MTIzNjUwMywiZXhwIjoxNjgxMzIyOTAzfQ.b8B13FX_VF95mhgQjhtbvsibFTtyETbbfsseTlaSMO4",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/user/empty-cart\n",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"empty-cart\n"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Cash Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTE0MGI3N2EwYzZiOTc0MWE4ZDJmYiIsImlhdCI6MTY4MzkxNzAxOCwiZXhwIjoxNjg0MDAzNDE4fQ.vqDhA5PLq5cgJmZQ6nP7PD7Oama0r4U7BwOFJjKFWX4",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"643079958cf069fefee7bddf\",\r\n    \"shippingInfo\": {\r\n        \"firstName\": \"Kainat\",\r\n        \"lastName\": \"Ashfaq\",\r\n        \"address\": \"Housing Colony\",\r\n        \"city\": \"Sheikhupura\",\r\n        \"state\": \"Punjab\",\r\n        \"pincode\": \"1234\",\r\n        \"other\": \"abcxyz\"\r\n    },\r\n\r\n    \"orderItems\": [\r\n        {\r\n            \"product\": \"64496d94aa32ea1a72830ae6\",\r\n            \"price\": \"1000\",\r\n            \"quantity\": \"2\",\r\n            \"color\": [\r\n                \"64496bdeaa32ea1a72830ad4\"\r\n            ]\r\n        }\r\n    ],\r\n\r\n    \"paidAt\": \"2023-05-01\",\r\n    \"totalprice\": \"2000\",\r\n    \"totalpriceAfterDiscount\": \"1800\",\r\n    \"orderStatus\": \"Ordered\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/cart/create-order",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"cart",
+								"create-order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTE0MGI3N2EwYzZiOTc0MWE4ZDJmYiIsImlhdCI6MTY4MzkxNzAxOCwiZXhwIjoxNjg0MDAzNDE4fQ.vqDhA5PLq5cgJmZQ6nP7PD7Oama0r4U7BwOFJjKFWX4",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/user/getmyorders",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"getmyorders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"Processing\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/order/update-order/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"order",
+								"update-order",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTIzNTg2NSwiZXhwIjoxNjgxMzIyMjY1fQ.FQU0eTT5joDKdeOOGlLCIiX4SRHVGOBbpAtxahiiL-c",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ahmad@gmail.com\",\r\n    \"password\": \"12345aa\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/user/reset-password-token/e876bc930eb807165eca79c340e3d4e9761275d5b860335bfa4d34ca33e9214f",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"user",
+								"reset-password-token",
+								"e876bc930eb807165eca79c340e3d4e9761275d5b860335bfa4d34ca33e9214f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Create a Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4MjUzMzMyNCwiZXhwIjoxNjgyNjE5NzI0fQ.47hr2IyK9Qs6YaOozWiDa2ULyf1dV_m9KEbooebVcQI",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Balm\",\r\n    \"category\": \"Lips\",\r\n    \"brand\": \"Huda\",\r\n    \"tags\": \"special\",\r\n    \"color\":[\"64496bdeaa32ea1a72830ad4\",\"64496bf4aa32ea1a72830ad8\"],\r\n    \"description\": \"Moisturizers are an essential part of every skin-care routine, Shereene Idriss, MD, a board-certified dermatologist at Union Square Laser Dermatology in New York City, tells Allure. Just as our bodies require us to hydrate with water, so does our skin.\",\r\n    \"price\": \"1500\",\r\n    \"quantity\": \"100\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/product/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRlMTJkMDY1MTFkNDZhOGYxM2ZhNSIsImlhdCI6MTY3ODcyNTg4MiwiZXhwIjoxNjc4ODEyMjgyfQ._chs6Ih0OFOqx-fw0qZI7fU72O1eWSc1aeWI_8B-224",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Face Cream\",\r\n    \"category\": \"Creams\",\r\n    \"brand\": \"Maybelline\",\r\n    \"description\": \"Hey\",\r\n    \"price\": \"1300\",\r\n    \"quantity\": \"100\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/product/6430737ffe9aa3e83ee75176",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"product",
+								"6430737ffe9aa3e83ee75176"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/product/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Products",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTIzNTg2NSwiZXhwIjoxNjgxMzIyMjY1fQ.FQU0eTT5joDKdeOOGlLCIiX4SRHVGOBbpAtxahiiL-c",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Face Moisturizer Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/product/6435a0a3fe3211f0ab745c70",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"product",
+								"6435a0a3fe3211f0ab745c70"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Products",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTIzNTg2NSwiZXhwIjoxNjgxMzIyMjY1fQ.FQU0eTT5joDKdeOOGlLCIiX4SRHVGOBbpAtxahiiL-c",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/product/6430737ffe9aa3e83ee75176",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"product",
+								"6430737ffe9aa3e83ee75176"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Wishlist",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTE0MGI3N2EwYzZiOTc0MWE4ZDJmYiIsImlhdCI6MTY4NDE2NDMzNywiZXhwIjoxNjg0MjUwNzM3fQ.ggNL2GTb0Oz70ogsrOlWsaPRnnQbdjczL8oZaoDmDE8",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"prodId\": \"64496d94aa32ea1a72830ae6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/product/wishlist",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"product",
+								"wishlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Give Rating",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTE0MGI3N2EwYzZiOTc0MWE4ZDJmYiIsImlhdCI6MTY4MzEyMDQ5NCwiZXhwIjoxNjgzMjA2ODk0fQ.jayp_qkbn23P8gSXFsQsoFRVH7D2VrI3TAOBsmjlNjk",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"star\": 4,\r\n    \"comment\": \"Hey! My new product is awesome.\",\r\n    \"prodId\": \"64496d94aa32ea1a72830ae6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/product/rating",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"product",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Product Image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4Mjk1NDc4MSwiZXhwIjoxNjgzMDQxMTgxfQ.b_YgxIvIoEAfWTFrrMVUsdAPeiCRQDd4G4pmqwyDZrc",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "liner.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/api/upload/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTQ3Mzk3NSwiZXhwIjoxNjgxNTYwMzc1fQ.m_7ZGjIq_GLzvHS22HszhgBYXk5qCpmeH7_eJvVhnkI",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/upload/delete-img/eluvb8wxc9wqewv9rtlr",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"upload",
+								"delete-img",
+								"eluvb8wxc9wqewv9rtlr"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Eyes Skincare Products",
+			"item": [
+				{
+					"name": "Create a Product",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4NDMxNTAzMiwiZXhwIjoxNjg0NDAxNDMyfQ.PCdw_wZ4fx8SEuLQh2WFL8rxrF7Ly5mZwB9SyQ2Rq58",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Eye Cream\",\r\n    \"category\": \"Eyes\",\r\n    \"brand\": \"Estee Lauder\",\r\n    \"tags\": \"special\",\r\n    \"description\": \"Go for a retinol or a peptide-packed eye cream. Retinol and retinoid are vitamin A derivatives that stimulate skin cell turnover and collagen production. “Retinol helps with overall texture and goes deeper into skin structures to revitalize wrinkles and improve the appearance of fine lines,” says Green.\",\r\n    \"price\": \"800\",\r\n    \"quantity\": \"5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/eyes-skincare-product/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"eyes-skincare-product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRlMTJkMDY1MTFkNDZhOGYxM2ZhNSIsImlhdCI6MTY3ODcyNTg4MiwiZXhwIjoxNjc4ODEyMjgyfQ._chs6Ih0OFOqx-fw0qZI7fU72O1eWSc1aeWI_8B-224",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Face Cream\",\r\n    \"category\": \"Creams\",\r\n    \"brand\": \"Maybelline\",\r\n    \"description\": \"Hey\",\r\n    \"price\": \"1300\",\r\n    \"quantity\": \"100\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/eyes-skincare-product/6464b4da1041f5eb78dbbd7c",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"eyes-skincare-product",
+								"6464b4da1041f5eb78dbbd7c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRlMTJkMDY1MTFkNDZhOGYxM2ZhNSIsImlhdCI6MTY3ODcyNTg4MiwiZXhwIjoxNjc4ODEyMjgyfQ._chs6Ih0OFOqx-fw0qZI7fU72O1eWSc1aeWI_8B-224",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Face Cream\",\r\n    \"category\": \"Creams\",\r\n    \"brand\": \"Maybelline\",\r\n    \"description\": \"Hey\",\r\n    \"price\": \"1300\",\r\n    \"quantity\": \"100\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/eyes-skincare-product/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"eyes-skincare-product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Products",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTIzNTg2NSwiZXhwIjoxNjgxMzIyMjY1fQ.FQU0eTT5joDKdeOOGlLCIiX4SRHVGOBbpAtxahiiL-c",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Face Moisturizer Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/eyes-skincare-product/6435a0a3fe3211f0ab745c70",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"eyes-skincare-product",
+								"6435a0a3fe3211f0ab745c70"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Products",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTIzNTg2NSwiZXhwIjoxNjgxMzIyMjY1fQ.FQU0eTT5joDKdeOOGlLCIiX4SRHVGOBbpAtxahiiL-c",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/eyes-skincare-product/6430737ffe9aa3e83ee75176",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"eyes-skincare-product",
+								"6430737ffe9aa3e83ee75176"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Wishlist",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTQ4MzA1NiwiZXhwIjoxNjgxNTY5NDU2fQ.-knGNno1BpWLs7B3G9X1oBcGi7rVw9ytn98mks9XM_U",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"prodId\": \"640db604aac23a91c142738f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/eyes-skincare-product/wishlist",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"eyes-skincare-product",
+								"wishlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Give Rating",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmViNWZhOGUzYzgzNjEwZWY4YWQ3YSIsImlhdCI6MTY4MTIzNjUwMywiZXhwIjoxNjgxMzIyOTAzfQ.b8B13FX_VF95mhgQjhtbvsibFTtyETbbfsseTlaSMO4",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"star\": 4,\r\n    \"comment\": \"Hey! My new product is awesome.\",\r\n    \"prodId\": \"640db604aac23a91c142738f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/eyes-skincare-product/rating",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"eyes-skincare-product",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Product Image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4Mjk1NDc4MSwiZXhwIjoxNjgzMDQxMTgxfQ.b_YgxIvIoEAfWTFrrMVUsdAPeiCRQDd4G4pmqwyDZrc",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "liner.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/api/upload/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTQ3Mzk3NSwiZXhwIjoxNjgxNTYwMzc1fQ.m_7ZGjIq_GLzvHS22HszhgBYXk5qCpmeH7_eJvVhnkI",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/upload/delete-img/eluvb8wxc9wqewv9rtlr",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"upload",
+								"delete-img",
+								"eluvb8wxc9wqewv9rtlr"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lips Skincare Products",
+			"item": [
+				{
+					"name": "Create a Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4NDMzMjkwNiwiZXhwIjoxNjg0NDE5MzA2fQ.ZHO49ZmJRbsOcbeDd1HvYXo1mRiLmtsBybwZmPYnSys",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Lips Moisturizing Balm\",\r\n    \"category\": \"Lips\",\r\n    \"brand\": \"Maybelline New York\",\r\n    \"tags\": \"special\",\r\n    \"description\": \"Some lip balms can definitely leave your lips feeling dry and chapped, but as long as you pay attention to formulas and use the right products, lip balm can be a great tool for keeping your lips moisturized, hydrated, and happy.\",\r\n    \"price\": \"200\",\r\n    \"quantity\": \"4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/lips-skincare-product/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"lips-skincare-product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRlMTJkMDY1MTFkNDZhOGYxM2ZhNSIsImlhdCI6MTY3ODcyNTg4MiwiZXhwIjoxNjc4ODEyMjgyfQ._chs6Ih0OFOqx-fw0qZI7fU72O1eWSc1aeWI_8B-224",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Face Cream\",\r\n    \"category\": \"Creams\",\r\n    \"brand\": \"Maybelline\",\r\n    \"description\": \"Hey\",\r\n    \"price\": \"1300\",\r\n    \"quantity\": \"100\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/lips-skincare-product/6464e2d8e1d6ddc46d4c8506",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"lips-skincare-product",
+								"6464e2d8e1d6ddc46d4c8506"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/lips-skincare-product/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"lips-skincare-product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Products",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTIzNTg2NSwiZXhwIjoxNjgxMzIyMjY1fQ.FQU0eTT5joDKdeOOGlLCIiX4SRHVGOBbpAtxahiiL-c",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Face Moisturizer Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/lips-skincare-product/6435a0a3fe3211f0ab745c70",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"lips-skincare-product",
+								"6435a0a3fe3211f0ab745c70"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Products",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTIzNTg2NSwiZXhwIjoxNjgxMzIyMjY1fQ.FQU0eTT5joDKdeOOGlLCIiX4SRHVGOBbpAtxahiiL-c",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/lips-skincare-product/6430737ffe9aa3e83ee75176",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"lips-skincare-product",
+								"6430737ffe9aa3e83ee75176"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add to Wishlist",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTQ4MzA1NiwiZXhwIjoxNjgxNTY5NDU2fQ.-knGNno1BpWLs7B3G9X1oBcGi7rVw9ytn98mks9XM_U",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"prodId\": \"640db604aac23a91c142738f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/product/wishlist",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"product",
+								"wishlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Give Rating",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MmViNWZhOGUzYzgzNjEwZWY4YWQ3YSIsImlhdCI6MTY4MTIzNjUwMywiZXhwIjoxNjgxMzIyOTAzfQ.b8B13FX_VF95mhgQjhtbvsibFTtyETbbfsseTlaSMO4",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n{\r\n    \"star\": 4,\r\n    \"comment\": \"Hey! My new product is awesome.\",\r\n    \"prodId\": \"640db604aac23a91c142738f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/product/rating",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"product",
+								"rating"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Product Image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4Mjk1NDc4MSwiZXhwIjoxNjgzMDQxMTgxfQ.b_YgxIvIoEAfWTFrrMVUsdAPeiCRQDd4G4pmqwyDZrc",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "liner.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/api/upload/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjhhMTc3MmM5NzU5ZDJjNTFlYzg2YiIsImlhdCI6MTY4MTQ3Mzk3NSwiZXhwIjoxNjgxNTYwMzc1fQ.m_7ZGjIq_GLzvHS22HszhgBYXk5qCpmeH7_eJvVhnkI",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/upload/delete-img/eluvb8wxc9wqewv9rtlr",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"upload",
+								"delete-img",
+								"eluvb8wxc9wqewv9rtlr"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blog",
+			"item": [
+				{
+					"name": "Create a Blog",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGM0ZDgzNTIxZjYxNjY0MTM2OGJjNiIsImlhdCI6MTY3ODUyNzg4OCwiZXhwIjoxNjc4NjE0Mjg4fQ.Qm1rIOi-4LbtRUGRgMRyCzqdICD7PZkMthXM9_JLf2M",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Lip Balm\",\r\n    \"description\": \"Hey\",\r\n    \"category\": \"Lips\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/blog/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blog",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Blog",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGM0ZDgzNTIxZjYxNjY0MTM2OGJjNiIsImlhdCI6MTY3ODUyNzg4OCwiZXhwIjoxNjc4NjE0Mjg4fQ.Qm1rIOi-4LbtRUGRgMRyCzqdICD7PZkMthXM9_JLf2M",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Lip Balm Updated\",\r\n    \"description\": \"Hey\",\r\n    \"category\": \"Lips\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/blog/63fb146db538ae4622992c9d",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blog",
+								"63fb146db538ae4622992c9d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Blog",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/blog/63fb128e40b21d457fcb4b60",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blog",
+								"63fb128e40b21d457fcb4b60"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Blogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/blog/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blog",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Blogs",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGM0ZDgzNTIxZjYxNjY0MTM2OGJjNiIsImlhdCI6MTY3ODUyNzg4OCwiZXhwIjoxNjc4NjE0Mjg4fQ.Qm1rIOi-4LbtRUGRgMRyCzqdICD7PZkMthXM9_JLf2M",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/blog/63fb146db538ae4622992c9d",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blog",
+								"63fb146db538ae4622992c9d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like a Blog",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGM0ZDgzNTIxZjYxNjY0MTM2OGJjNiIsImlhdCI6MTY3ODUyNzg4OCwiZXhwIjoxNjc4NjE0Mjg4fQ.Qm1rIOi-4LbtRUGRgMRyCzqdICD7PZkMthXM9_JLf2M",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"blogId\": \"63fb129a40b21d457fcb4b62\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/blog/likes",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blog",
+								"likes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dislike a Blog",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGM0ZDgzNTIxZjYxNjY0MTM2OGJjNiIsImlhdCI6MTY3ODUyNzg4OCwiZXhwIjoxNjc4NjE0Mjg4fQ.Qm1rIOi-4LbtRUGRgMRyCzqdICD7PZkMthXM9_JLf2M",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"blogId\": \"63fb129a40b21d457fcb4b62\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/blog/dislikes",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blog",
+								"dislikes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Blog Image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4Mjk1NDc4MSwiZXhwIjoxNjgzMDQxMTgxfQ.b_YgxIvIoEAfWTFrrMVUsdAPeiCRQDd4G4pmqwyDZrc",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "liner.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:5000/api/upload/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"upload",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product Category",
+			"item": [
+				{
+					"name": "Add Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Body\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/category/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Body Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/category/63fb4b377b4fa09bd1ed231d",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category",
+								"63fb4b377b4fa09bd1ed231d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/category/63fb4b1d7b4fa09bd1ed2317",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category",
+								"63fb4b1d7b4fa09bd1ed2317"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/category/63fb4b377b4fa09bd1ed231d",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category",
+								"63fb4b377b4fa09bd1ed231d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/category/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"category",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Blog Category",
+			"item": [
+				{
+					"name": "Add Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRhNzMxYzdiMTE5N2MxZTYxNDdhNCIsImlhdCI6MTY3ODYxNjM5MCwiZXhwIjoxNjc4NzAyNzkwfQ.HBNyWF0kit-nHEbcbsb3kVgFw0TsZU7ZJB8CTcS5wuw",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Blog 5\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/blogcategory/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blogcategory",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRhNzMxYzdiMTE5N2MxZTYxNDdhNCIsImlhdCI6MTY3ODYxNjM5MCwiZXhwIjoxNjc4NzAyNzkwfQ.HBNyWF0kit-nHEbcbsb3kVgFw0TsZU7ZJB8CTcS5wuw",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Blog 4 Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/blogcategory/63fb4fc6759bc667fb3a07bc",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blogcategory",
+								"63fb4fc6759bc667fb3a07bc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRhNzMxYzdiMTE5N2MxZTYxNDdhNCIsImlhdCI6MTY3ODYxNjM5MCwiZXhwIjoxNjc4NzAyNzkwfQ.HBNyWF0kit-nHEbcbsb3kVgFw0TsZU7ZJB8CTcS5wuw",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/blogcategory/63fb4fbd759bc667fb3a07b8",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blogcategory",
+								"63fb4fbd759bc667fb3a07b8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/blogcategory/63fb4fc6759bc667fb3a07bc",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blogcategory",
+								"63fb4fc6759bc667fb3a07bc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/blogcategory/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"blogcategory",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Brand",
+			"item": [
+				{
+					"name": "Add Brand",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRhNzMxYzdiMTE5N2MxZTYxNDdhNCIsImlhdCI6MTY3ODYxNjM5MCwiZXhwIjoxNjc4NzAyNzkwfQ.HBNyWF0kit-nHEbcbsb3kVgFw0TsZU7ZJB8CTcS5wuw",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Huda Beauty\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/brand/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"brand",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Brand",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRhNzMxYzdiMTE5N2MxZTYxNDdhNCIsImlhdCI6MTY3ODYxNjM5MCwiZXhwIjoxNjc4NzAyNzkwfQ.HBNyWF0kit-nHEbcbsb3kVgFw0TsZU7ZJB8CTcS5wuw",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Huda Updated\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/brand/640da836642adf4f67272386",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"brand",
+								"640da836642adf4f67272386"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Brand",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRhNzMxYzdiMTE5N2MxZTYxNDdhNCIsImlhdCI6MTY3ODYxNjM5MCwiZXhwIjoxNjc4NzAyNzkwfQ.HBNyWF0kit-nHEbcbsb3kVgFw0TsZU7ZJB8CTcS5wuw",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/brand/63fb632443ea527a53cae2ab",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"brand",
+								"63fb632443ea527a53cae2ab"
+							],
+							"query": [
+								{
+									"key": "x-auth-token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRhNzMxYzdiMTE5N2MxZTYxNDdhNCIsImlhdCI6MTY3ODYxNjM5MCwiZXhwIjoxNjc4NzAyNzkwfQ.HBNyWF0kit-nHEbcbsb3kVgFw0TsZU7ZJB8CTcS5wuw",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Brand",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/brand/63fb633843ea527a53cae2af",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"brand",
+								"63fb633843ea527a53cae2af"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Brands",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/brand/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"brand",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Color",
+			"item": [
+				{
+					"name": "Add Color",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4MzkyMDUwMCwiZXhwIjoxNjg0MDA2OTAwfQ.LtFC-02sUJa4mLpk9IWghYqX6zwIs2b1ONVcrI2bq5o",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"green\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/color/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"color",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Color",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4MjUzMzMyNCwiZXhwIjoxNjgyNjE5NzI0fQ.47hr2IyK9Qs6YaOozWiDa2ULyf1dV_m9KEbooebVcQI",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"blue\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/api/color/64496bf4aa32ea1a72830ad8",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"color",
+								"64496bf4aa32ea1a72830ad8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Color",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MzliNDJmNjhhZDE1NDZkNzQ3NGEyNCIsImlhdCI6MTY4MjUzMzMyNCwiZXhwIjoxNjgyNjE5NzI0fQ.47hr2IyK9Qs6YaOozWiDa2ULyf1dV_m9KEbooebVcQI",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/api/brand/64496bdeaa32ea1a72830ad4",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"brand",
+								"64496bdeaa32ea1a72830ad4"
+							],
+							"query": [
+								{
+									"key": "x-auth-token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MGRhNzMxYzdiMTE5N2MxZTYxNDdhNCIsImlhdCI6MTY3ODYxNjM5MCwiZXhwIjoxNjc4NzAyNzkwfQ.HBNyWF0kit-nHEbcbsb3kVgFw0TsZU7ZJB8CTcS5wuw",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Color",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/color/64496bdeaa32ea1a72830ad4",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"color",
+								"64496bdeaa32ea1a72830ad4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Colors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/api/color/",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"color",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

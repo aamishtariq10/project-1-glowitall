@@ -1,14 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {HiOutlineHeart} from "react-icons/hi";
-import {BiGitCompare} from "react-icons/bi";
-import {AiOutlineZoomIn} from "react-icons/ai";
-import {BsCartPlus} from "react-icons/bs";
-import { useDispatch, useSelector} from "react-redux";
-import {addToWishlist} from '../features/products/productSlice';
-
-//can import images by name and then pass below in img src can be done in multiple files
+import { HiOutlineHeart } from "react-icons/hi";
+import { BiGitCompare } from "react-icons/bi";
+import { AiOutlineZoomIn } from "react-icons/ai";
+import { BsCartPlus } from "react-icons/bs";
+import { useDispatch } from "react-redux";
+import { addToWishlist } from "../features/products/productSlice";
 
 const FaceMakeupCard = ({ grid, data }) => {
   const dispatch = useDispatch();
@@ -19,18 +17,30 @@ const FaceMakeupCard = ({ grid, data }) => {
     dispatch(addToWishlist(id));
   };
 
+  const [hoveredCard, setHoveredCard] = useState(null);
+
+  const handleMouseEnter = (index) => {
+    setHoveredCard(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredCard(null);
+  };
+
   return (
     <>
       {Array.isArray(data) &&
-        data.map((item) => (
+        data.slice(0, 4).map((item, index) => (
           <div
             key={item._id}
             className={`${
               location.pathname === "/store" ? `gr-${grid}` : "col-3"
-            }`}
+            } ${hoveredCard === index ? "card-hovered" : ""}`}
+            onMouseEnter={() => handleMouseEnter(index)}
+            onMouseLeave={handleMouseLeave}
           >
             <div to="/product/:id" className="product-card position-relative">
-              <div className="whishlist-icon  position-absolute">
+              <div className="whishlist-icon position-absolute">
                 <button className="border-0 bg-transparent">
                   <HiOutlineHeart
                     onClick={() => addToWish(item._id)}
@@ -56,10 +66,12 @@ const FaceMakeupCard = ({ grid, data }) => {
                   size={24}
                   activeColor="#ffd700"
                 />
-                <p
-                  className={`description ${grid === 12 ? "d-block" : "d-none"}`}
-                  dangerouslySetInnerHTML={{ __html: item.description }}
-                ></p>
+                {grid === 12 && (
+                  <p
+                    className="description d-block"
+                    dangerouslySetInnerHTML={{ __html: item.description }}
+                  ></p>
+                )}
                 <p>
                   <div className="price">$ {item.price}</div>
                 </p>
@@ -87,6 +99,4 @@ const FaceMakeupCard = ({ grid, data }) => {
   );
 };
 
-
 export default FaceMakeupCard;
-

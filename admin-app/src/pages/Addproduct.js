@@ -15,7 +15,6 @@ import Dropzone from "react-dropzone";
 import { deleteImg, uploadImg } from "../features/upload/uploadSlice";
 import { createProducts, resetState } from "../features/product/productSlice";
 
-
 let schema = yup.object().shape({
   title: yup.string().required("Title is Required"),
   description: yup.string().required("Description is Required"),
@@ -45,6 +44,7 @@ const Addproduct = () => {
   const catState = useSelector((state) => state.pCategory.pCategories);
   const colorState = useSelector((state) => state.color.colors);
   const imgState = useSelector((state) => state.upload.images);
+  console.log("image state ", imgState);
   const newProduct = useSelector((state) => state.product);
   const { isSuccess, isError, isLoading, createdProduct } = newProduct;
   useEffect(() => {
@@ -69,6 +69,10 @@ const Addproduct = () => {
       url: i.url,
     });
   });
+
+  // const handleImageUpload = (acceptedFiles) => {
+  //   dispatch(uploadImg(acceptedFiles));
+  // };
 
   useEffect(() => {
     formik.values.color = color ? color : " ";
@@ -95,7 +99,7 @@ const Addproduct = () => {
   const [desc, setDesc] = useState();
   const handledesc = (e) => {
     setDesc(e);
-  }
+  };
   const handleColors = (e) => {
     setColor(e);
     console.log(color);
@@ -243,18 +247,19 @@ const Addproduct = () => {
           <div className="showimages d-flex flex-wrap gap-3">
             {imgState?.map((i, j) => {
               return (
-                <div className=" position-relative" key={j}>
+                <div className="position-relative" key={j}>
                   <button
                     type="button"
                     onClick={() => dispatch(deleteImg(i.public_id))}
                     className="btn-close position-absolute"
                     style={{ top: "10px", right: "10px" }}
                   ></button>
-                  <img src={i} alt="" width={200} height={200} />
+                  <img src={i.url} alt="" width={200} height={200} />
                 </div>
               );
             })}
           </div>
+
           <button
             className="btn btn-success border-0 rounded-3 my-5"
             type="submit"

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../features/users/userSlice";
 import { FaEdit } from "react-icons/fa";
 import "./Profile.css";
-
+import axios from "axios";
 const profileSchema = yup.object({
   firstname: yup.string().required("First Name is Required"),
   lastname: yup.string().required("Last Name is Required"),
@@ -18,31 +18,50 @@ const profileSchema = yup.object({
     .required("Email is Required"),
 });
 
-
-
 const Profile = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state?.auth?.user);
   const [edit, setEdit] = useState(true);
   const [profilePicture, setProfilePicture] = useState(null);
-   const user = JSON.parse(localStorage.getItem("user"));
-   console.log(user)
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       firstname: user?.firstname,
       lastname: user?.lastname,
       email: user?.email,
+      address: user?.address,
     },
     validationSchema: profileSchema,
     onSubmit: (values) => {
       dispatch(updateProfile(values));
+      user.firstname = values.firstname;
+      user.lastname = values.lastname;
+      user.address = values.address;
+      localStorage.setItem("user", JSON.stringify(user));
       setEdit(true);
     },
   });
-  const handleProfilePictureChange = (e) => {
+  const handleProfilePictureUpload = async (e) => {
     const file = e.target.files[0];
     setProfilePicture(file);
+    try {
+      const formData = new FormData();
+      formData.append("profilePicture", profilePicture);
+
+      const res = await axios.post("/api/upload/profilepic", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res)
+      // const { imageUrl } = res.data;
+      // dispatch(uploadProfilePicture(imageUrl));
+      // setProfilePicture(imageUrl);
+    } catch (error) {
+      console.log("Error uploading profile picture:", error);
+    }
   };
   return (
     <>
@@ -71,6 +90,13 @@ const Profile = () => {
                           backgroundImage: `url(${user.profilePicture})`,
                         }}
                       ></div>
+                    ) : profilePicture ? (
+                      <div
+                        className="profile-pic"
+                        style={{
+                          backgroundImage: `url(${profilePicture})`,
+                        }}
+                      ></div>
                     ) : (
                       <div className="default-profile-pic"></div>
                     )}
@@ -81,7 +107,7 @@ const Profile = () => {
                       type="file"
                       name="profilePicture"
                       accept="image/*"
-                      onChange={handleProfilePictureChange}
+                      onChange={(e) => handleProfilePictureUpload(e)}
                       id="profile-picture-upload"
                       style={{ display: "none" }}
                     />
@@ -160,6 +186,26 @@ const Profile = () => {
                 />
                 <div className="error">
                   {formik.touched.email && formik.errors.email}
+                </div>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="exampleInputEmail2" className="form-label">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  name="address"
+                  disabled={edit}
+                  className="form-control"
+                  id="address"
+                  aria-describedby="address"
+                  value={formik.values.address} // Join the address array with a comma and space
+                  onChange={formik.handleChange("address")}
+                  onBlur={formik.handleBlur("address")}
+                />
+
+                <div className="error">
+                  {formik.touched.address && formik.errors.address}
                 </div>
               </div>
               {edit === false && (

@@ -181,7 +181,7 @@ const saveAddress = asyncHandler(async (req, res, next) => {
 //get all users
 const getallUser = asyncHandler(async (req, res) => {
   try {
-    const getUsers = await User.find();
+    const getUsers = await User.find({ verified: true, role: "user" });
     res.json(getUsers);
   } catch (error) {
     throw new Error(error);
@@ -220,7 +220,7 @@ const deleteaUser = asyncHandler(async (req, res) => {
 const updatedUser = asyncHandler(async (req, res) => {
   const { id } = req.user;
   validateMongoDbId(id);
-
+  console.log(req.body);
   try {
     const updateaUser = await User.findByIdAndUpdate(
       id,
@@ -228,6 +228,7 @@ const updatedUser = asyncHandler(async (req, res) => {
         firstname: req?.body?.firstname,
         lastname: req?.body?.lastname,
         email: req?.body?.email,
+        address: req?.body?.address || [],
       },
       {
         new: true,
@@ -354,14 +355,37 @@ const userCart = asyncHandler(async (req, res) => {
   validateMongoDbId(_id);
 
   try {
-    let newCart = await new Cart({
-      userId: _id,
-      productId,
-      color,
-      price,
-      quantity,
-    }).save();
-    res.json(newCart);
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    if (quantity <= 0) {
+      return res.status(400).json({
+        message: "please select product quantity 1 or more",
+      });
+    }
+
+    if (quantity > product.quantity) {
+      return res.status(400).json({
+        message: "Not enough products available",
+      });
+    }
+
+    let cartItem = await Cart.findOne({ userId: _id, productId, color });
+
+    if (cartItem) {
+      cartItem.quantity += quantity;
+    } else {
+      cartItem = await new Cart({
+        userId: _id,
+        productId,
+        color,
+        price,
+        quantity,
+      }).save();
+    }
+
+    res.json({ message: "prodcut added to cart successfuly", cartItem });
   } catch (error) {
     throw new Error(error);
   }
@@ -401,12 +425,33 @@ const removeProductFromCart = asyncHandler(async (req, res) => {
 const updateProductQuantityFromCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   const { cartItemId, newQuantity } = req.params;
-  validateMongoDbId(id);
+  validateMongoDbId(_id);
 
   try {
     const cartItem = await Cart.findOne({ userId: _id, _id: cartItemId });
+
+    if (!cartItem) {
+      return res.status(404).json({
+        message: "Cart item not found",
+      });
+    }
+
+    const product = await Product.findById(cartItem.productId);
+    if (!product) {
+      return res.status(400).json({
+        message: "Product not available",
+      });
+    }
+
+    if (newQuantity > product.quantity) {
+      return res.status(400).json({
+        message: "Quantity exceeds the available quantity of the product",
+      });
+    }
+
     cartItem.quantity = newQuantity;
-    cartItem.save();
+    await cartItem.save();
+
     res.json(cartItem);
   } catch (error) {
     throw new Error(error);
@@ -417,29 +462,72 @@ const createOrder = asyncHandler(async (req, res) => {
   const {
     shippingInfo,
     orderItems,
-    totalprice,
-    totalpriceAfterDiscount,
+    totalPrice,
+    totalPriceAfterDiscount,
     paymentInfo,
   } = req.body;
+  console.log(req.body);
   const { id } = req.user;
   validateMongoDbId(id);
 
-  try {
-    const order = await Order.create({
-      shippingInfo,
-      orderItems,
-      totalprice,
-      totalpriceAfterDiscount,
-      paymentInfo,
-      user: id,
-    });
-    res.json({
-      order,
-      success: true,
-    });
-  } catch (error) {
-    throw new Error(error);
+  // try {
+  for (const orderItem of orderItems) {
+    const product = await Product.findById(orderItem.productId);
+    if (product) {
+      if (orderItem.quantity <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: `please select products  1 or more ${product.brand}`,
+        });
+      }
+      if (orderItem.quantity > product.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `Insufficient quantity available for product  ${product.brand}`,
+        });
+      }
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: `Product with ID ${orderItem.productId} not found`,
+      });
+    }
   }
+  const order = await Order.create({
+    shippingInfo,
+    orderItems,
+    totalPrice,
+    totalPriceAfterDiscount,
+    paymentInfo,
+    user: id,
+  });
+
+  if (order) {
+    for (const orderItem of orderItems) {
+      const product = await Product.findById(orderItem.productId);
+      if (product) {
+        if (product.quantity < 0) {
+          product.quantity = 0;
+        } else {
+          product.quantity -= orderItem.quantity;
+        }
+        await product.save();
+      }
+    }
+    await Cart.deleteMany({ userId: id });
+  }
+
+  console.log(order);
+  res.status(200).json({
+    order,
+    success: true,
+  });
+  // } catch (error) {
+  //   res.status(500).json({
+  //     success: false,
+  //     error: "internal server error",
+  //   });
+  // }
 });
 
 const getMyOrders = asyncHandler(async (req, res) => {
@@ -447,7 +535,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
   try {
     const orders = await Order.find({ user: id })
       .populate("user")
-      .populate("orderItems.product")
+      .populate("orderItems.productId")
       .populate("orderItems.color");
     res.json({
       orders,
