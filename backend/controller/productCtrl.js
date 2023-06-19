@@ -5,7 +5,7 @@ const slugify = require("slugify");
 const cloudinaryUploadImg = require("../utils/cloudinary");
 const fs = require("fs");
 const validateMongoDbId = require("../utils/validateMongodbId");
-
+const sendNotificationToUser = require("../utils/SendNotificationToUser");
 const getRecommendedProducts = asyncHandler(async (req, res) => {
   console.log("req.body:", req.body);
   try {
@@ -56,7 +56,7 @@ const createProduct = asyncHandler(async (req, res) => {
 //get a single product
 const getaProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  validateMongoDbId(id);
+  //  validateMongoDbId(id);
   try {
     const findProduct = await Product.findById(id).populate("color");
     res.json(findProduct);
@@ -112,9 +112,9 @@ const getallProduct = asyncHandler(async (req, res) => {
 
     // Execute the query
     const products = await query;
-    const productCount = await Product.countDocuments(); // Get total product count
+    const productCount = await Product.countDocuments();
 
-    res.json({ products, totalProducts: productCount }); // Send products and totalProducts in the response
+    res.json({ products, totalProducts: productCount });
   } catch (error) {
     throw new Error(error);
   }
@@ -132,7 +132,7 @@ const updateaProduct = asyncHandler(async (req, res) => {
 
     // Replace the color field with the ObjectId values
     req.body.color = colorIds;
-
+    const product = await Product.findById({ _id: id });
     const updatedProduct = await Product.findOneAndUpdate(
       { _id: id },
       req.body,
@@ -140,7 +140,22 @@ const updateaProduct = asyncHandler(async (req, res) => {
         new: true,
       }
     );
+    console.log(req.body);
+    console.log(product);
+    if (req.body.quantity != product.quantity) {
+      const usersWithWishlist = await User.find({
+        wishlist: { $in: [updatedProduct._id.toString()] },
+      });
 
+      console.log(usersWithWishlist);
+      usersWithWishlist.forEach((user) => {
+        const data = {
+          user,
+          updatedProduct,
+        };
+        sendNotificationToUser(data);
+      });
+    }
     res.json({
       status: 200,
       message: "product updated sucessfully",
@@ -164,6 +179,20 @@ const deleteProduct = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+
+// const getRandomProducts = asyncHandler(async (req, res) => {
+//   // try {
+//   const products = Product.find();
+//   console.log(products);
+//   res.json({
+//     status: 200,
+//     message: "Random products fetched successfully",
+//     data: products,
+//   });
+//   // } catch (error) {
+//   //   throw new Error(error);
+//   // }
+// });
 
 //Add to wishlist
 const addToWishlist = asyncHandler(async (req, res) => {
@@ -310,4 +339,5 @@ module.exports = {
   rating,
   uploadImages,
   getRecommendedProducts,
+  getRandomProducts,
 };

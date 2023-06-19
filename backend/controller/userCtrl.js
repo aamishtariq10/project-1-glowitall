@@ -530,10 +530,33 @@ const createOrder = asyncHandler(async (req, res) => {
   // }
 });
 
+const updateOrder = asyncHandler(async (req, res) => {
+  const { session_id } = req.params;
+  const { paymentStatus } = req.body;
+  const Status = paymentStatus;
+  const { id } = req.user;
+  validateMongoDbId(id);
+
+  try {
+    const order = await Order.findOne({ paymentInfo: session_id });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    order.paymentStatus = Status;
+    await order.save();
+
+    res.json({ message: "Order succesfully recieved", order: order });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating order payment status" });
+  }
+});
+
 const getMyOrders = asyncHandler(async (req, res) => {
   const { id } = req.user;
   try {
-    const orders = await Order.find({ user: id })
+    const orders = await Order.find({ user: id, paymentStatus: "paid" })
       .populate("user")
       .populate("orderItems.productId")
       .populate("orderItems.color");
@@ -547,7 +570,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
 
 const getAllOrders = asyncHandler(async (req, res) => {
   try {
-    const orders = await Order.find()
+    const orders = await Order.find({ paymentStatus: "paid" })
       .populate("user")
       .populate("orderItems.productId")
       .populate("orderItems.color");
@@ -651,30 +674,26 @@ const getAllOrders = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
-
-
+*/
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { status } = req.body;
+  const { orderStatus } = req.body;
+  const { order_id } = req.params;
   const { id } = req.user;
   validateMongoDbId(id);
 
   try {
-    const updateOrderStatus = await Order.findByIdAndUpdate(
-      id,
-      {
-        orderStatus: status,
-        paymentIntent: {
-          status: status,
-        },
-      },
-      { new: true }
-    );
-    res.json(updateOrderStatus);
+    const order = await Order.findOne({ _id: order_id });
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    order.orderStatus = orderStatus;
+    await order.save();
+    res.json({ message: "Order Status Updated", order: order });
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: "Error updating order status" });
   }
-});*/
+});
 
 module.exports = {
   createUser,
@@ -699,6 +718,8 @@ module.exports = {
   createOrder,
   getMyOrders,
   getAllOrders,
+  updateOrder,
+  updateOrderStatus,
 };
 //getallorders
 //getorderbyuserid

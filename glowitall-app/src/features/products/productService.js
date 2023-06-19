@@ -3,6 +3,7 @@ import { base_url, config } from "../../utils/axiosConfig";
 import { toast } from "react-toastify";
 
 const getProducts = async (data) => {
+  console.log("getProducts", data);
   const response = await axios.get(
     `${base_url}product?${data?.brand ? `brand=${data?.brand}&` : ""}${
       data?.tag ? `tags=${data?.tag}&` : ""
@@ -29,7 +30,7 @@ const addToWishlist = async (prodId) => {
     config
   );
   if (response.data) {
-    toast.success("Product Added To wishlist");
+    // toast.success("Product Added To wishlist");
     return response.data;
   }
 };

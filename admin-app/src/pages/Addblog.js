@@ -111,7 +111,7 @@ const Addblog = () => {
       title: blogName || "",
       description: blogDesc || "",
       category: blogCategory || "",
-      images: blogImages || [],
+      images: blogImages || img,
     },
     validationSchema: schema,
     onSubmit: (values) => {
@@ -119,13 +119,16 @@ const Addblog = () => {
         const data = { id: getBlogId, blogData: values };
         dispatch(updateBlog(data));
         navigate("/admin/blog-list");
+
         dispatch(resetState());
       } else {
         dispatch(createBlog(values));
         formik.resetForm();
+
         setTimeout(() => {
           dispatch(resetState());
-        }, 300);
+          window.location.href = "http://localhost:3001/admin/blog-list";
+        }, 3000);
       }
     },
   });

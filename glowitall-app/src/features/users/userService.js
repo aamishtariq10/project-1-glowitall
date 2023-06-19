@@ -21,8 +21,8 @@ const login = async (userData) => {
   }
 };
 const getUserWishlist = async () => {
-  //  const header = localStorage.getItem("userToken");
   const response = await axios.get(`${base_url}user/wishlist`, config);
+  console.log("wishlist response", response);
   if (response.data) {
     return response.data;
   }

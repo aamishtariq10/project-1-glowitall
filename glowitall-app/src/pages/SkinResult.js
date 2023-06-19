@@ -64,6 +64,20 @@ function SkincareRecommendation() {
   useEffect(() => {
     handleGetRecommendations();
   }, []);
+  const handleRandomProducts = async () => {
+    const res = await axios.get("http://localhost:5000/api/product/random-products");
+    if (res.data.status == 200) {
+      // toast.info(res.data.message);
+      // SetResdata(res.data.data);
+    } else {
+      // toast.error(res.data.message);
+    }
+    // console.log(res);
+  };
+
+  useEffect(() => {
+    handleRandomProducts();
+  }, []);
   return (
     <>
       <Meta title={"Result"} />

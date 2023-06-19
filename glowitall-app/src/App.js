@@ -66,7 +66,7 @@ function App() {
             <Route path="eyes-skincare" element={<EyesSkincare />} />
             <Route path="lips-makeup" element={<LipsMakeup />} />
             <Route path="lips-skincare" element={<LipsSkincare />} />
-            <Route path="body" element={<Body />} />
+            <Route pahandleMouseEnterth="body" element={<Body />} />
             <Route path="/product/:id" element={<SingleProduct />} />
             <Route path="blog" element={<Blog />} />
             <Route path="blog/:id" element={<SingleBlog />} />

@@ -1,10 +1,25 @@
 import React, { useEffect } from "react";
 import { Table } from "antd";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+
+import {
+  TextField,
+  Select,
+  FormControl,
+  Typography,
+  InputLabel,
+  Autocomplete,
+  Button,
+  MenuItem,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { getOrders } from "../features/auth/authSlice";
+import { base_url } from "../utils/base_url";
+import { config } from "../utils/axiosconfig";
 
 const columns = [
   {
@@ -80,6 +95,10 @@ const columns = [
     dataIndex: "createdAt",
   },
   {
+    title: "Payment Status",
+    dataIndex: "paymentStatus",
+  },
+  {
     title: "paid At",
     dataIndex: "paidAt",
   },
@@ -117,6 +136,7 @@ const Orders = () => {
           title: product.productId.title,
         })),
         amount: order.totalPrice,
+        paymentStatus: order.paymentStatus,
         // color: order.orderItems.map((product) => ({
         //   title: product.productId.color,
         // })),
@@ -125,24 +145,43 @@ const Orders = () => {
         createdAt: new Date(order.createdAt).toLocaleString(),
         action: (
           <>
-            <Link to="/" className="fs-3 text-danger">
-              <BiEdit />
-            </Link>
-            <Link className="ms-3 fs-3 text-danger" to="/">
-              <AiFillDelete />
-            </Link>
+            {order.orderStatus === "Ordered" && (
+              <Button onClick={() => handleUpdateStatus(order)}>
+                Update status to delivered
+              </Button>
+            )}
+            {order.orderStatus === "delivered" && <span>Order Delivered</span>}
           </>
         ),
       });
     }
   }
-
+  const handleUpdateStatus = async (order) => {
+    try {
+      const data = {
+        orderStatus: "delivered",
+      };
+      const response = await axios.put(
+        `${base_url}user/orders/${order._id}`,
+        data,
+        config
+      );
+      console.log(response);
+      if (response.status == 200) {
+        toast.info(response.data.message);
+        dispatch(getOrders());
+      }
+    } catch (error) {
+      toast.info("Internal Server Error");
+    }
+  };
   return (
     <div>
       <h3 className="mb-4 title">Orders</h3>
       <div>
         <Table columns={columns} dataSource={data} />
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -33,10 +33,19 @@ var orderSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+
       pincode: {
         type: Number,
         required: true,
       },
+    },
+    paymentInfo: {
+      type: String,
+      required: true,
+    },
+    paymentStatus: {
+      type: String,
+      default: "unpaid",
     },
     /*paymentInfo:{
         razorpayOrderId:
@@ -55,7 +64,7 @@ var orderSchema = new mongoose.Schema(
         productId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
-           required: true,
+          required: true,
         },
         color: {
           type: mongoose.Schema.Types.ObjectId,

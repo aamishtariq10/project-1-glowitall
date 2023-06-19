@@ -28,7 +28,7 @@ const checkout = async (req, res) => {
       },
     ],
     mode: "payment",
-    success_url: `http://localhost:3000/payment-success`,
+    success_url: `http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `http://localhost:3000/payment-reject?session_id={CHECKOUT_SESSION_ID}`,
   });
   res.status(200).json({
@@ -49,4 +49,5 @@ const paymentVerification = async (req, res) => {
 module.exports = {
   checkout,
   paymentVerification,
+  
 };

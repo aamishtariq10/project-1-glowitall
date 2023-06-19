@@ -4,9 +4,42 @@ import Meta from "../components/Meta";
 import { Link } from "react-router-dom";
 import Container from "../components/Container";
 import { ToastContainer, toast } from "react-toastify";
-
+import { base_url } from "../utils/axiosConfig";
 const PaymentSuccess = () => {
   const user = JSON.parse(localStorage.getItem("user"));
+  const token = JSON.parse(localStorage.getItem("userToken"));
+  const [sessionId, setSessionId] = useState("");
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionParam = urlParams.get("session_id");
+    setSessionId(sessionParam);
+    const updateOrderPaymentStatus = async () => {
+      try {
+        const response = await fetch(
+          `${base_url}user/orders/payment/${sessionParam}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({ paymentStatus: "paid" }),
+          }
+        );
+        if (response.status == 200) {
+          toast.info("Order Payment Succesfull");
+          setTimeout(() => {
+            window.location.href = "http://localhost:3000";
+          }, 3000);
+        }
+      } catch (error) {
+        toast.info("Internal Server Error");
+      }
+    };
+    updateOrderPaymentStatus();
+  }, []);
+
   return (
     <>
       <Meta title={"Checkout"} />

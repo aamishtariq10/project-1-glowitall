@@ -62,16 +62,15 @@ const ProductList = () => {
   useEffect(() => {
     dispatch(getProducts());
   }, []);
-  const handleDelete = (productId) => {
-  }
+  const handleDelete = (productId) => {};
 
   const productState = useSelector((state) => state.product.products);
   const [searchTerm, setSearchTerm] = useState("");
   const handleEditClick = (product) => {
     navigate(`/admin/product/${product.title}`, { state: { product } });
   };
-  const data = productState
-    .filter((product) => {
+  console.log(productState);
+  const data = productState?.products?.filter((product) => {
       const { title, category } = product;
       const lowerCaseTerm = searchTerm.toLowerCase();
       return (

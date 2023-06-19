@@ -18,7 +18,9 @@ const Header = () => {
   const authState = useSelector((state) => state?.auth);
   const productState = useSelector((state) => state?.product?.product);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
-  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).firstname : null
+  const user = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")).firstname
+    : null;
   // const [profilePicture, setProfilePicture] = useState(userState?.profilePicture);
   const [paginate, setPaginate] = useState(true);
   const [total, setTotal] = useState(null);
@@ -111,7 +113,7 @@ const Header = () => {
                 </Link>
 
                 <Link
-                  to={authState?.user === null ? "/login" :""}
+                  to={authState?.user === null ? "/login" : ""}
                   className="d-flex align-items-center gap-10 text-dark"
                   style={{ textDecoration: "none" }}
                 >
@@ -345,7 +347,7 @@ const Header = () => {
                         {/* Add more sub-links as needed */}
                       </ul>
                     </li>
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                       <NavLink
                         className="nav-link text-white"
                         activeClassName="active"
@@ -354,8 +356,8 @@ const Header = () => {
                       >
                         BODY
                       </NavLink>
-                    </li>
-                    <li className="nav-item">
+                    </li> */}
+                    {/* <li className="nav-item">
                       <NavLink
                         className="nav-link text-white"
                         activeClassName="active"
@@ -364,7 +366,7 @@ const Header = () => {
                       >
                         BUNDLES
                       </NavLink>
-                    </li>
+                    </li> */}
                     <li className="nav-item">
                       <NavLink
                         className="nav-link  text-white"

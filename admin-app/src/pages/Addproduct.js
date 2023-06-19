@@ -141,6 +141,9 @@ const Addproduct = () => {
         }
       } else {
         dispatch(createProducts(values));
+        setTimeout(() => {
+          navigate("/admin/list-product");
+        }, 1000);
         formik.resetForm();
         setSelectedOptions([]);
       }

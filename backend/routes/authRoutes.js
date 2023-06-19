@@ -27,6 +27,7 @@ const {
   createOrder,
   getOrders,
   updateOrderStatus,
+  updateOrder,
   getAllOrders,
 } = require("../controller/userCtrl");
 const { checkout, paymentVerification } = require("../controller/paymentCtrl");
@@ -39,13 +40,14 @@ router.post("/cart", authMiddleware, userCart);
 router.post("/order/checkout", authMiddleware, checkout);
 router.post("/order/paymentVerification", authMiddleware, paymentVerification);
 router.post("/cart/create-order", authMiddleware, createOrder);
+router.put("/orders/payment/:session_id", authMiddleware, updateOrder);
 // router.delete("order/delete/:session_id", authMiddleware, deleteOrder);
 router.post("/forgot-password-token", forgotPasswordToken);
 router.post("/verifyotp", verifyOTP);
 router.get("/getallorders", authMiddleware, isAdmin, getAllOrders);
 // router.post("/getorderbyuser/:id", authMiddleware, isAdmin, getOrders);
 router.put("/reset-password/:token", resetPassword);
-//router.put("/order/update-order/:id", authMiddleware, isAdmin, updateOrderStatus);
+router.put("/orders/:order_id", authMiddleware, isAdmin, updateOrderStatus);
 //router.put("/order/update-order/:id", authMiddleware, updateOrderStatus);
 router.put("/password/:id", authMiddleware, updatePassword);
 router.put("/edit-user", authMiddleware, updatedUser);
