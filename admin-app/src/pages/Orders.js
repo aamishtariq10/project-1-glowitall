@@ -12,8 +12,34 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "User Name",
+    dataIndex: "user",
+    render: (user) => (
+      <div>
+        <p>
+          {user.firstName} {user.lastLame}
+        </p>
+      </div>
+    ),
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    render: (user) => (
+      <div>
+        <p>{user.email}</p>
+      </div>
+    ),
+  },
+  {
+    title: "Shipping Info",
+    dataIndex: "shippingInfo",
+    render: (shippingInfo) => (
+      <div>
+        <p>Address: {shippingInfo?.address}</p>
+        <p>City: {shippingInfo?.city}</p>
+      </div>
+    ),
   },
   {
     title: "Product",
@@ -29,11 +55,39 @@ const columns = [
   {
     title: "Amount",
     dataIndex: "amount",
+    render: (amount) => <p>${amount}</p>,
+  },
+  // {
+  //   title: "Color",
+  //   dataIndex: "color",
+  //   render: (color) =>
+  //     color.map((c, index) => (
+  //       <div
+  //         key={index}
+  //         style={{
+  //           backgroundColor: c.title,
+  //           width: "20px",
+  //           height: "20px",
+  //           borderRadius: "50%",
+  //           display: "inline-block",
+  //           marginRight: "5px",
+  //         }}
+  //       />
+  //     )),
+  // },
+  {
+    title: "created At",
+    dataIndex: "createdAt",
   },
   {
-    title: "Date",
-    dataIndex: "date",
+    title: "paid At",
+    dataIndex: "paidAt",
   },
+  {
+    title: "Order Status",
+    dataIndex: "orderStatus",
+  },
+
   {
     title: "Action",
     dataIndex: "action",
@@ -47,19 +101,28 @@ const Orders = () => {
   }, [dispatch]);
 
   const orderState = useSelector((state) => state.auth.orders);
-
-  const data1 = [];
+  console.log("order state", orderState);
+  const data = [];
 
   if (orderState) {
     for (let i = 0; i < orderState.length; i++) {
-      data1.push({
+      const order = orderState[i];
+      const shippingInfo = order?.shippingInfo || {};
+      data.push({
         key: i + 1,
-        name: orderState[i].orderby.firstname,
-        product: orderState[i].products.map((product) => ({
-          title: product.product.title,
+        user: shippingInfo,
+        email: order.user,
+        shippingInfo: shippingInfo,
+        product: order.orderItems.map((product) => ({
+          title: product.productId.title,
         })),
-        amount: orderState[i].paymentIntent.amount,
-        date: new Date(orderState[i].createdAt).toLocaleString(),
+        amount: order.totalPrice,
+        // color: order.orderItems.map((product) => ({
+        //   title: product.productId.color,
+        // })),
+        orderStatus: order.orderStatus,
+        paidAt: new Date(order.paidAt).toLocaleString(),
+        createdAt: new Date(order.createdAt).toLocaleString(),
         action: (
           <>
             <Link to="/" className="fs-3 text-danger">
@@ -78,7 +141,7 @@ const Orders = () => {
     <div>
       <h3 className="mb-4 title">Orders</h3>
       <div>
-        <Table columns={columns} dataSource={data1} />
+        <Table columns={columns} dataSource={data} />
       </div>
     </div>
   );

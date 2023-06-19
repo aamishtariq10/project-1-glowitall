@@ -4,11 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { getCategories, deleteAProductCategory } from "../features/pCategory/pCategorySlice";
+import {
+  getCategories,
+  deleteAProductCategory,
+} from "../features/pCategory/pCategorySlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomModal from "../components/CustomModal";
-import { resetState } from "../features/brand/brandSlice";
+import { resetState } from "../features/pCategory/pCategorySlice";
 
 const columns = [
   {
@@ -43,6 +46,7 @@ const CategoryList = () => {
     dispatch(getCategories());
   }, []);
   const pCatState = useSelector((state) => state.pCategory.pCategories);
+  console.log("=????????", pCatState);
   const data1 = [];
   for (let i = 0; i < pCatState.length; i++) {
     data1.push({
@@ -50,7 +54,10 @@ const CategoryList = () => {
       name: pCatState[i].title,
       action: (
         <>
-          <Link to={`/admin/category/${pCatState[i]._id}`} className="fs-3 text-danger">
+          <Link
+            to={`/admin/category/${pCatState[i]._id}`}
+            className="fs-3 text-danger"
+          >
             <BiEdit />
           </Link>
           <Button
@@ -74,7 +81,7 @@ const CategoryList = () => {
         toast.error("Failed to delete category!");
       });
   };
-  
+
   return (
     <div>
       <h3 className="mb-4 title">Product Categories </h3>

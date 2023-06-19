@@ -3,11 +3,12 @@ import { base_url, config } from "../../utils/axiosConfig";
 import { toast } from "react-toastify";
 
 const getProducts = async (data) => {
-  console.log(data);
   const response = await axios.get(
-    `${base_url}product?${data?.brand ? `brand=${data?.brand}&&` : ""}${
-      data?.tag ? `tags=${data?.tag}&&` : ""
-    }${data?.category ? `category=${data?.category}&&` : ""}`
+    `${base_url}product?${data?.brand ? `brand=${data?.brand}&` : ""}${
+      data?.tag ? `tags=${data?.tag}&` : ""
+    }${data?.category ? `category=${data?.category}&` : ""}${
+      data?.sort ? `sort=${data?.sort}&` : ""
+    }_page=${data.page}&_limit=${data.perPage}`
   );
   if (response.data) {
     return response.data;

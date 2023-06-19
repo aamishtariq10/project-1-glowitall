@@ -30,7 +30,7 @@ const FaceMakeupCard = ({ grid, data }) => {
   return (
     <>
       {Array.isArray(data) &&
-        data.slice(0, 4).map((item, index) => (
+        data.map((item, index) => (
           <div
             key={item._id}
             className={`${

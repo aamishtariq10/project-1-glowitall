@@ -33,7 +33,7 @@ const MascaraResult = () => {
       price: 25,
       description: "Product 2 description",
     },
-    // Add more objects as needed
+
   ];
 
   return (

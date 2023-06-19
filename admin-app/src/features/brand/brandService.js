@@ -22,23 +22,12 @@ const getBrands = async () => {
 };
 
 const getBrand = async (id) => {
-  const header = localStorage.getItem("userToken");
-  const response = await axios.get(`${base_url}brand/${id}`, {
-    headers: {
-      userToken: header,
-    },
-  });
-
+  const response = await axios.get(`${base_url}brand/${id}`, config);
   return response.data;
 };
 
 const deleteBrand = async (id) => {
-  const header = localStorage.getItem("userToken");
-  const response = await axios.delete(`${base_url}brand/${id}`, {
-    headers: {
-      userToken: header,
-    },
-  });
+  const response = await axios.delete(`${base_url}brand/${id}`, config);
 
   return response.data;
 };

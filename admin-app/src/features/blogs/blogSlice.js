@@ -1,20 +1,17 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import blogService from "./blogService";
 
-export const getBlogs = createAsyncThunk(
-  "blog/get-blogs",
-  async (thunkAPI) => {
-    try {
-      return await blogService.getBlogs();
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+export const getBlogs = createAsyncThunk("blog/get-blogs", async (thunkAPI) => {
+  try {
+    return await blogService.getBlogs();
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
+});
 
 export const getABlog = createAsyncThunk(
   "blog/get-blogs/id",
-  async (id,thunkAPI) => {
+  async (id, thunkAPI) => {
     try {
       return await blogService.getBlog(id);
     } catch (error) {
@@ -47,7 +44,7 @@ export const updateBlog = createAsyncThunk(
 );
 export const deleteABlog = createAsyncThunk(
   "blog/delete-blogs",
-  async (id,thunkAPI) => {
+  async (id, thunkAPI) => {
     try {
       return await blogService.deleteABlog(id);
     } catch (error) {
@@ -109,6 +106,10 @@ export const blogSlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.createdBlog = action.payload.title;
+        state.blogDesc = action.payload.description;
+        state.blogName = action.payload.title;
+        state.blogCategory = action.payload.category;
+        state.blogImages = action.payload.images;
       })
       .addCase(getABlog.rejected, (state, action) => {
         state.isLoading = false;
@@ -151,4 +152,3 @@ export const blogSlice = createSlice({
   },
 });
 export default blogSlice.reducer;
-

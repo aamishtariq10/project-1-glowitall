@@ -29,46 +29,47 @@ const columns = [
 const Bloglist = () => {
   const [open, setOpen] = useState(false);
   const [blogId, setblogId] = useState("");
+  const dispatch = useDispatch();
   const showModal = (e) => {
     setOpen(true);
     setblogId(e);
   };
-
-  const hideModal = () => {
-    setOpen(false);
-  };
-  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(resetState());
     dispatch(getBlogs());
   }, []);
+
+  const hideModal = () => {
+    setOpen(false);
+  };
+
   const getBlogState = useSelector((state) => state.blogs);
-const data1 = [];
-if (getBlogState?.blogs) {
-  for (let i = 0; i < getBlogState.blogs.length; i++) {
-    data1.push({
-      key: i + 1,
-      name: getBlogState.blogs[i]?.title,
-      category: getBlogState.blogs[i]?.category,
-      action: (
-        <>
-          <Link
-            to={`/admin/blog/${getBlogState.blogs[i]?.id}`}
-            className=" fs-3 text-danger"
-          >
-            <BiEdit />
-          </Link>
-          <button
-            className="ms-3 fs-3 text-danger bg-transparent border-0"
-            onClick={() => showModal(getBlogState.blogs[i]?._id)}
-          >
-            <AiFillDelete />
-          </button>
-        </>
-      ),
-    });
+  const data1 = [];
+  if (getBlogState?.blogs) {
+    for (let i = 0; i < getBlogState.blogs.length; i++) {
+      data1.push({
+        key: i + 1,
+        name: getBlogState.blogs[i]?.title,
+        category: getBlogState.blogs[i]?.category,
+        action: (
+          <>
+            <Link
+              to={`/admin/blog/${getBlogState.blogs[i]?.id}`}
+              className=" fs-3 text-danger"
+            >
+              <BiEdit />
+            </Link>
+            <button
+              className="ms-3 fs-3 text-danger bg-transparent border-0"
+              onClick={() => showModal(getBlogState.blogs[i]?._id)}
+            >
+              <AiFillDelete />
+            </button>
+          </>
+        ),
+      });
+    }
   }
-}
 
   const deleteBlog = (e) => {
     dispatch(deleteABlog(e));

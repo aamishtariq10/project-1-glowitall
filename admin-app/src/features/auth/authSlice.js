@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "./authService";
-
+import { toast } from "react-toastify";
 const getCustomerfromLocalStorage = localStorage.getItem("userToken")
   ? localStorage.getItem("userToken")
   : null;
-  
 const initialState = {
   user: getCustomerfromLocalStorage,
   orders: [],
@@ -13,7 +12,7 @@ const initialState = {
   isSuccess: false,
   message: "",
 };
-// Admin login 
+// Admin login
 export const login = createAsyncThunk(
   "auth/admin-login",
   async (user, thunkAPI) => {
@@ -22,7 +21,7 @@ export const login = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
-  } 
+  }
 );
 //GetOrders
 export const getOrders = createAsyncThunk(
@@ -61,28 +60,46 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.user = action.payload;
         state.message = "success";
+        if (state.isSuccess === true) {
+          console.log(action.payload.findUser);
+
+          const userdetails = action.payload?.findAdmin;
+          if (userdetails) {
+            const user = {
+              firstname: userdetails.firstname,
+              lastname: userdetails.lastname,
+              email: userdetails.email,
+              role: userdetails.role,
+              address: userdetails.address,
+            };
+            localStorage.setItem("user", JSON.stringify(user));
+            toast.info(action.payload.message);
+          }
+        }
       })
       .addCase(login.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error;
         state.isLoading = false;
         state.user = null;
-      })
-      //getorders
-      builder.addCase(getOrders.pending, (state) => {
-        state.isLoading = true;
+        state.message = action.payload.response.data.message;
+        // toast.error("Wrong credentials");
       });
-  
-      builder.addCase(getOrders.fulfilled, (state, action) => {
-        state.isError = false;
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.orders = action.payload;
-        state.message = "success";
-      });
-  
-      builder.addCase(getOrders.rejected, (state, action) => {
+    //getorders
+    builder.addCase(getOrders.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(getOrders.fulfilled, (state, action) => {
+      state.isError = false;
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.orders = action.payload;
+      state.message = "success";
+    });
+
+    builder
+      .addCase(getOrders.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;
@@ -105,4 +122,3 @@ export const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
-

@@ -60,7 +60,7 @@ const Cart = () => {
 
   const deleteACartProduct = (id) => {
     dispatch(deleteCartProduct(id));
-    // window.location.reload();
+     window.location.reload();
     fetchUserCart();
   };
   console.log(cartProducts);
@@ -113,7 +113,7 @@ const Cart = () => {
                         color:{" "}
                         <ul className="colors ps-0">
                           <li
-                            style={{ backgroundColor: item?.color.title }}
+                            style={{ backgroundColor: item?.color?.title }}
                           ></li>
                         </ul>{" "}
                       </p>

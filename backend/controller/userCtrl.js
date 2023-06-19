@@ -329,7 +329,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
       secure: true,
       sameSite: "none",
     });
-    res.status(201).json({ findAdmin, userToken });
+    res.json({ status: 200, findAdmin, userToken });
   } else {
     throw new Error("Invalid Credentials");
   }
@@ -545,6 +545,18 @@ const getMyOrders = asyncHandler(async (req, res) => {
   }
 });
 
+const getAllOrders = asyncHandler(async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("user")
+      .populate("orderItems.productId")
+      .populate("orderItems.color");
+    res.json(orders);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 /*const emptyCart = asyncHandler(async (req, res) => {
   const { id } = req.user;
   validateMongoDbId(id);
@@ -640,20 +652,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
   }
 });
 
-const getOrders = asyncHandler(async (req, res) => {
-  const { id } = req.user;
-  validateMongoDbId(id);
 
-  try {
-    const userorders = await Order.findOne({ orderby: id });
-    const cart = await Cart.findOneAndRemove({ orderby: user.id })
-      .populate("products.product")
-      .exec();
-    res.json(userorders);
-  } catch (error) {
-    throw new Error(error);
-  }
-});
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
   const { status } = req.body;
@@ -699,6 +698,7 @@ module.exports = {
   updateProductQuantityFromCart,
   createOrder,
   getMyOrders,
+  getAllOrders,
 };
 //getallorders
 //getorderbyuserid

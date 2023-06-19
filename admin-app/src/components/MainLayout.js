@@ -24,6 +24,13 @@ const MainLayout = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const handleSignOut = () => {
+    localStorage.clear();
+    navigate("/"); // Navigate to the home page or any other desired route
+  };
+  const user = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null;
   const navigate = useNavigate();
   return (
     <Layout>
@@ -133,9 +140,6 @@ const MainLayout = () => {
                 },
               ],
             },
-          
-            
-           
           ]}
         />
       </Sider>
@@ -163,25 +167,22 @@ const MainLayout = () => {
             </div>
 
             <div className="d-flex gap-3 align-items-center dropdown">
-              
               <div
                 role="button"
                 id="dropdownMenuLink"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                
-                <p className="mb-0">aliahmad@gmail.com</p>
+                <p className="mb-0">{user?.firstname}</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li>
-                  
-                </li>
+                <li></li>
                 <li>
                   <Link
                     className="dropdown-item py-1 mb-1"
                     style={{ height: "auto", lineHeight: "20px" }}
                     to="/"
+                    onClick={handleSignOut}
                   >
                     Signout
                   </Link>
