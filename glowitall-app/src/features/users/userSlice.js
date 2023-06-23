@@ -236,6 +236,7 @@ export const authSlice = createSlice({
             email: userdetails.email,
             role: userdetails.role,
             address: userdetails.address,
+            profile: userdetails.profile,
           };
           localStorage.setItem("user", JSON.stringify(user));
           toast.info(action.payload.message);

@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-import { Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { Table, Input, Popconfirm } from "antd";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-
 import {
   TextField,
   Select,
@@ -20,7 +19,7 @@ import { Link } from "react-router-dom";
 import { getOrders } from "../features/auth/authSlice";
 import { base_url } from "../utils/base_url";
 import { config } from "../utils/axiosconfig";
-
+const { Search } = Input;
 const columns = [
   {
     title: "SNo",
@@ -114,21 +113,25 @@ const columns = [
 ];
 
 const Orders = () => {
+  const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getOrders());
   }, [dispatch]);
 
   const orderState = useSelector((state) => state.auth.orders);
-  console.log("order state", orderState);
-  const data = [];
+  // console.log("order state", orderState);
+  const data = orderState
+    ?.filter((order) => {
+      const { user } = order;
 
-  if (orderState) {
-    for (let i = 0; i < orderState.length; i++) {
-      const order = orderState[i];
+      const lowerCaseTerm = searchTerm.toLowerCase();
+      return user?.email?.toLowerCase().includes(lowerCaseTerm);
+    })
+    .map((order, index) => {
       const shippingInfo = order?.shippingInfo || {};
-      data.push({
-        key: i + 1,
+      return {
+        key: index + 1,
         user: shippingInfo,
         email: order.user,
         shippingInfo: shippingInfo,
@@ -137,9 +140,6 @@ const Orders = () => {
         })),
         amount: order.totalPrice,
         paymentStatus: order.paymentStatus,
-        // color: order.orderItems.map((product) => ({
-        //   title: product.productId.color,
-        // })),
         orderStatus: order.orderStatus,
         paidAt: new Date(order.paidAt).toLocaleString(),
         createdAt: new Date(order.createdAt).toLocaleString(),
@@ -153,9 +153,9 @@ const Orders = () => {
             {order.orderStatus === "delivered" && <span>Order Delivered</span>}
           </>
         ),
-      });
-    }
-  }
+      };
+    });
+
   const handleUpdateStatus = async (order) => {
     try {
       const data = {
@@ -166,7 +166,7 @@ const Orders = () => {
         data,
         config
       );
-      console.log(response);
+      // console.log(response);
       if (response.status == 200) {
         toast.info(response.data.message);
         dispatch(getOrders());
@@ -175,9 +175,20 @@ const Orders = () => {
       toast.info("Internal Server Error");
     }
   };
+
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+  };
   return (
     <div>
       <h3 className="mb-4 title">Orders</h3>
+      <Search
+        placeholder="Search by title or category"
+        allowClear
+        enterButton
+        onSearch={handleSearch}
+        style={{ width: 200, marginBottom: 16 }}
+      />
       <div>
         <Table columns={columns} dataSource={data} />
       </div>

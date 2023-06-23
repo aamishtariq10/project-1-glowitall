@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "antd";
 import { BiEdit } from "react-icons/bi";
+import { Table, Input, Popconfirm } from "antd";
 import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -10,8 +10,8 @@ import {
   resetState,
 } from "../features/bCategory/bCategorySlice";
 import CustomModal from "../components/CustomModal";
-import showModal from "../components/CustomModal"
-
+import showModal from "../components/CustomModal";
+const { Search } = Input;
 const columns = [
   {
     title: "SNo",
@@ -47,7 +47,7 @@ const columns = [
 const Blogcatlist = () => {
   const [open, setOpen] = useState(false);
   const [blogCatId, setBlogCatId] = useState("");
-  
+
   const showModal = (id) => {
     setOpen(true);
     setBlogCatId(id);
@@ -64,21 +64,36 @@ const Blogcatlist = () => {
   }, [dispatch]);
 
   const bCatState = useSelector((state) => state.bCategory.bCategories);
-
-  const data = bCatState.map((category, index) => ({
-    key: index + 1,
-    id: category._id,
-    name: category.title,
-  }));
+  const [searchTerm, setSearchTerm] = useState("");
+  const data = bCatState
+    .filter((category) => {
+      const lowerCaseTerm = searchTerm.toLowerCase();
+      return category.title.toLowerCase().includes(lowerCaseTerm);
+    })
+    .map((category, index) => ({
+      key: index + 1,
+      id: category._id,
+      name: category.title,
+    }));
 
   const deleteBlogCategory = (id) => {
     dispatch(deleteABlogCat(id));
     setOpen(false);
   };
 
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+  };
   return (
     <div>
       <h3 className="mb-4 title">Blog Categories</h3>
+      <Search
+        placeholder="Search by title or category"
+        allowClear
+        enterButton
+        onSearch={handleSearch}
+        style={{ width: 200, marginBottom: 16 }}
+      />
       <div>
         <Table columns={columns} dataSource={data} />
       </div>

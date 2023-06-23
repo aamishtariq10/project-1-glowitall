@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "antd";
+import { Table, Input, Popconfirm } from "antd";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteABlog, getBlogs, resetState } from "../features/blogs/blogSlice";
 import CustomModal from "../components/CustomModal";
-
+const { Search } = Input;
 const columns = [
   {
     title: "SNo",
@@ -29,6 +29,7 @@ const columns = [
 const Bloglist = () => {
   const [open, setOpen] = useState(false);
   const [blogId, setblogId] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const dispatch = useDispatch();
   const showModal = (e) => {
     setOpen(true);
@@ -43,33 +44,35 @@ const Bloglist = () => {
     setOpen(false);
   };
 
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+  };
   const getBlogState = useSelector((state) => state.blogs);
-  const data1 = [];
-  if (getBlogState?.blogs) {
-    for (let i = 0; i < getBlogState.blogs.length; i++) {
-      data1.push({
-        key: i + 1,
-        name: getBlogState.blogs[i]?.title,
-        category: getBlogState.blogs[i]?.category,
-        action: (
-          <>
-            <Link
-              to={`/admin/blog/${getBlogState.blogs[i]?.id}`}
-              className=" fs-3 text-danger"
-            >
-              <BiEdit />
-            </Link>
-            <button
-              className="ms-3 fs-3 text-danger bg-transparent border-0"
-              onClick={() => showModal(getBlogState.blogs[i]?._id)}
-            >
-              <AiFillDelete />
-            </button>
-          </>
-        ),
-      });
-    }
-  }
+  const data1 = getBlogState?.blogs
+    .filter((blog) => {
+      console.log(blog);
+      const { title } = blog;
+      const lowerCaseTerm = searchTerm.toLowerCase();
+      return title?.toLowerCase().includes(lowerCaseTerm);
+    })
+    .map((blog, index) => ({
+      key: index + 1,
+      name: blog?.title,
+      category: blog?.category,
+      action: (
+        <>
+          <Link to={`/admin/blog/${blog?._id}`} className="fs-3 text-danger">
+            <BiEdit />
+          </Link>
+          <button
+            className="ms-3 fs-3 text-danger bg-transparent border-0"
+            onClick={() => showModal(blog?._id)}
+          >
+            <AiFillDelete />
+          </button>
+        </>
+      ),
+    }));
 
   const deleteBlog = (e) => {
     dispatch(deleteABlog(e));
@@ -82,6 +85,13 @@ const Bloglist = () => {
   return (
     <div>
       <h3 className="mb-4 title">Blogs List</h3>
+      <Search
+        placeholder="Search by title or category"
+        allowClear
+        enterButton
+        onSearch={handleSearch}
+        style={{ width: 200, marginBottom: 16 }}
+      />
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>

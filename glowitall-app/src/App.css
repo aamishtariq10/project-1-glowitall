@@ -24,6 +24,32 @@
   --light-color: #f0f0f0;
   --color-background: 251, 227, 234;
 }
+.product-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 10px;
+  align-items: flex-start;
+}
+
+.product-container::-webkit-scrollbar {
+  display: none;
+}
+
+.card-wrapper {
+  margin-right: 20px;
+}
+
+.product-card {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  width: 180px; /* Adjust the width to make the card smaller */
+  margin-bottom: 20px;
+
+}
+
 .section-heading {
   font-size: 26px;
   line-height: 32px;

@@ -31,7 +31,7 @@ const Login = () => {
         if (res.payload.status == 200) {
           toast.success("login successfull");
           setTimeout(() => {
-            navigate("/admin");
+            window.location.href = "http://localhost:3001/admin";
           }, 3000);
         } else {
           toast.error("Invalid credentials ");

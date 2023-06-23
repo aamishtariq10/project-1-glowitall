@@ -7,7 +7,7 @@ const {
   deleteProduct,
   addToWishlist,
   rating,
-  getRandomProducts,
+  featureProducts,
   uploadImages,
   getRecommendedProducts,
 } = require("../controller/productCtrl");
@@ -24,7 +24,9 @@ router.post("/recommendations", getRecommendedProducts);
 router.get("/:id", getaProduct);
 router.put("/wishlist", authMiddleware, addToWishlist);
 router.put("/rating", authMiddleware, rating);
-router.get("/random-products",getRandomProducts);
+router.delete("/delete/:productId" ,authMiddleware,isAdmin, deleteProduct )
+// router.get("/random-products",getRandomProducts);
+router.get("/get/featured", featureProducts);
 router.get("/", getallProduct);
 router.put("/:id", authMiddleware, isAdmin, updateaProduct);
 router.put(

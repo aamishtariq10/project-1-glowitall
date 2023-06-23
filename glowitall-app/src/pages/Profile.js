@@ -9,6 +9,8 @@ import { updateProfile } from "../features/users/userSlice";
 import { FaEdit } from "react-icons/fa";
 import "./Profile.css";
 import axios from "axios";
+import { base_url, config } from "../utils/axiosConfig";
+
 const profileSchema = yup.object({
   firstname: yup.string().required("First Name is Required"),
   lastname: yup.string().required("Last Name is Required"),
@@ -22,9 +24,10 @@ const Profile = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state?.auth?.user);
   const [edit, setEdit] = useState(true);
-  const [profilePicture, setProfilePicture] = useState(null);
   const user = JSON.parse(localStorage.getItem("user"));
   console.log(user);
+
+  const [profilePicture, setProfilePicture] = useState(user.profile || null);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -35,34 +38,46 @@ const Profile = () => {
     },
     validationSchema: profileSchema,
     onSubmit: (values) => {
-      dispatch(updateProfile(values));
+      const inputs = {
+        ...values,
+        profile: profilePicture,
+      };
+      dispatch(updateProfile(inputs));
       user.firstname = values.firstname;
       user.lastname = values.lastname;
       user.address = values.address;
+      user.profile = profilePicture;
       localStorage.setItem("user", JSON.stringify(user));
       setEdit(true);
     },
   });
   const handleProfilePictureUpload = async (e) => {
+    const userToken = JSON.parse(localStorage.getItem("userToken"));
+    const config2 = {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    console.log(e.target.files[0]);
     const file = e.target.files[0];
-    setProfilePicture(file);
+    // setProfilePicture(file);
     try {
       const formData = new FormData();
-      formData.append("profilePicture", profilePicture);
+      formData.append("file", file);
 
-      const res = await axios.post("/api/upload/profilepic", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(res)
-      // const { imageUrl } = res.data;
-      // dispatch(uploadProfilePicture(imageUrl));
-      // setProfilePicture(imageUrl);
+      const res = await axios.post(
+        `${base_url}user/upload/profilePic`,
+        formData,
+        config2
+      );
+      console.log(res);
+      setProfilePicture(res.data.data);
     } catch (error) {
       console.log("Error uploading profile picture:", error);
     }
   };
+
   return (
     <>
       <Meta title={"My Profile"} />
@@ -83,18 +98,13 @@ const Profile = () => {
                 </label>
                 {edit ? (
                   <div>
-                    {user?.profilePicture ? (
+                    {profilePicture || user?.profilePicture ? (
                       <div
                         className="profile-pic"
                         style={{
-                          backgroundImage: `url(${user.profilePicture})`,
-                        }}
-                      ></div>
-                    ) : profilePicture ? (
-                      <div
-                        className="profile-pic"
-                        style={{
-                          backgroundImage: `url(${profilePicture})`,
+                          backgroundImage: `url(${
+                            profilePicture || user.profilePicture
+                          })`,
                         }}
                       ></div>
                     ) : (
@@ -115,11 +125,13 @@ const Profile = () => {
                       htmlFor="profile-picture-upload"
                       className="profile-pic-upload"
                     >
-                      {user?.profilePicture ? (
+                      {profilePicture || user?.profilePicture ? (
                         <div
                           className="profile-pic"
                           style={{
-                            backgroundImage: `url(${user.profilePicture})`,
+                            backgroundImage: `url(${
+                              profilePicture || user.profilePicture
+                            })`,
                           }}
                         ></div>
                       ) : (

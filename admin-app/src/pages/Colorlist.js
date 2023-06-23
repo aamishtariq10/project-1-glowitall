@@ -14,7 +14,7 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "Name",
+    title: "Color",
     dataIndex: "color",
     render: (color) => (
       <div
@@ -79,20 +79,20 @@ const Colorlist = () => {
       dispatch(getColors());
     }, 100);
   };
-  const handleSearch = (value) => {
-    setSearchTerm(value);
-  };
+  // const handleSearch = (value) => {
+  //   setSearchTerm(value);
+  // };
 
   return (
     <div>
       <h3 className="mb-4 title">Colors</h3>
-      <Search
+      {/* <Search
         placeholder="Search by name"
         allowClear
         enterButton
         onSearch={handleSearch}
         style={{ width: 200, marginBottom: 16 }}
-      />
+      /> */}
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>

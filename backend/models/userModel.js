@@ -27,6 +27,10 @@ var userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
+    profile: {
+      type: String,
+      default: "https://dummyimage.com/300x300/00000b/ffffff",
+    },
     otp: {
       type: Number,
     },

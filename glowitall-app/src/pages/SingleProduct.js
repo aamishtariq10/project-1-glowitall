@@ -18,7 +18,8 @@ import { addProductToCart } from "../features/users/userSlice";
 import { getUserCart } from "../features/users/userSlice";
 import { addRating } from "../features/products/productSlice";
 import axios from "axios";
-
+import { base_url } from "../utils/axiosConfig";
+import FeaturedProducts from "../components/FeaturedProducts";
 const SingleProduct = () => {
   const [color, setColor] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -29,7 +30,7 @@ const SingleProduct = () => {
   const dispatch = useDispatch();
   const productState = useSelector((state) => state.product.singleproduct);
   const cartState = useSelector((state) => state.auth.cartProducts);
-
+  const [resData, setFeatured] = useState([]);
   console.log(productState);
   useEffect(() => {
     dispatch(getAProduct(getProductId));
@@ -72,6 +73,23 @@ const SingleProduct = () => {
       // navigate('/cart')
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${base_url}product/get/featured`);
+        console.log("==========> features", response);
+        if (response.data?.status === 200) {
+          setFeatured(response.data.data);
+        } else {
+          setFeatured([]);
+        }
+      } catch (error) {
+        console.error("Error fetching featured products:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const props = {
     width: 400,
@@ -366,15 +384,14 @@ const SingleProduct = () => {
         </div>
       </Container>
 
-      {/*<Container class1="popular-wrapper py-5 home-wrapper-2">
+      <Container class1="popular-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
             <h3 className="section-heading">Our Popular Products</h3>
           </div>
-          <MakeupCard />
-          <SkincareCard />
+          <FeaturedProducts data={resData} grid={6} />
         </div>
-      </Container>*/}
+      </Container>
     </>
   );
 };

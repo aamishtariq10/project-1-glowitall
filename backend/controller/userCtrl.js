@@ -9,10 +9,16 @@ const validateMongoDbId = require("../utils/validateMongodbId");
 const { generaterefreshToken } = require("../config/refreshtoken");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("./emailCtrl");
+const cloudinary = require("cloudinary").v2;
 const crypto = require("crypto");
 const SendEmailVerificationOTP = require("../utils/SendEmailVerificationOTP");
 //Create a user
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 const createUser = asyncHandler(async (req, res) => {
   try {
     const email = req.body.email;
@@ -220,7 +226,7 @@ const deleteaUser = asyncHandler(async (req, res) => {
 const updatedUser = asyncHandler(async (req, res) => {
   const { id } = req.user;
   validateMongoDbId(id);
-  console.log(req.body);
+  // console.log(req.body);
   try {
     const updateaUser = await User.findByIdAndUpdate(
       id,
@@ -229,12 +235,13 @@ const updatedUser = asyncHandler(async (req, res) => {
         lastname: req?.body?.lastname,
         email: req?.body?.email,
         address: req?.body?.address || [],
+        profile: req?.body?.profile,
       },
       {
         new: true,
       }
     );
-    res.json(updatedUser);
+    res.json(updateaUser);
   } catch (error) {
     throw new Error(error);
   }
@@ -695,6 +702,30 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 });
 
+const uploadProfilePic = asyncHandler(async (req, res) => {
+  const { id } = req.user;
+  validateMongoDbId(id);
+  try {
+    // console.log(req.file);
+    const result = await cloudinary.uploader.upload(req.file.path);
+    // console.log(result);
+    const uri = result.secure_url;
+    if (result) {
+      res.json({ status: 200, message: "Profile Updated", data: uri });
+    } else {
+      res.json({ status: 200, message: "Failed to upload", data: null });
+    }
+  } catch (error) {
+    res.json({ status: 200, message: "internal server error", data: null });
+  }
+});
+
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.API_KEY,
+//   api_secret: process.env.API_SECRET,
+// });
+
 module.exports = {
   createUser,
   verifyOTP,
@@ -720,6 +751,7 @@ module.exports = {
   getAllOrders,
   updateOrder,
   updateOrderStatus,
+  uploadProfilePic,
 };
 //getallorders
 //getorderbyuserid

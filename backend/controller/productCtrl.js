@@ -168,31 +168,51 @@ const updateaProduct = asyncHandler(async (req, res) => {
 
 //delete products
 const deleteProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params;
+  console.log(req.params);
+  const { productId } = req.params;
+
   try {
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
     }
-    const deleteProduct = await Product.findOneAndDelete(id);
-    res.json(deleteProduct);
+    const deleteProduct = await Product.findOneAndDelete(productId);
+    if (deleteProduct) {
+      res.json({
+        status: 200,
+        message: "product deleted successfully",
+        data: deleteProduct,
+      });
+    } else {
+      res.json({
+        status: 400,
+        message: "Failed to delete",
+        data: null,
+      });
+    }
   } catch (error) {
     throw new Error(error);
   }
 });
 
-// const getRandomProducts = asyncHandler(async (req, res) => {
-//   // try {
-//   const products = Product.find();
-//   console.log(products);
-//   res.json({
-//     status: 200,
-//     message: "Random products fetched successfully",
-//     data: products,
-//   });
-//   // } catch (error) {
-//   //   throw new Error(error);
-//   // }
-// });
+const featureProducts = asyncHandler(async (req, res) => {
+  try {
+    const products = await Product.aggregate([
+      { $match: { tags: "featured" } },
+      { $sample: { size: 10 } },
+    ]);
+
+    console.log(products);
+
+    res.json({
+      status: 200,
+      message: "Featured products fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 //Add to wishlist
 const addToWishlist = asyncHandler(async (req, res) => {
@@ -339,5 +359,5 @@ module.exports = {
   rating,
   uploadImages,
   getRecommendedProducts,
-  getRandomProducts,
+  featureProducts,
 };

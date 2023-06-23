@@ -6,6 +6,10 @@ import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { base_url } from "../utils/base_url";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import { config } from "../utils/axiosconfig";
 const { Search } = Input;
 const columns = [
   {
@@ -57,20 +61,36 @@ const columns = [
 ];
 
 const ProductList = () => {
+  const productState = useSelector((state) => state.product.products);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     dispatch(getProducts());
   }, []);
-  const handleDelete = (productId) => {};
+  const handleDelete = async (productId) => {
+    try {
+      const res = await axios.delete(
+        `${base_url}product/delete/${productId}`,
+        config
+      );
+      if (res.data.status === 200) {
+        toast.success(res.data.message);
+        dispatch(getProducts());
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch {
+      toast.error("Internal Server Error");
+    }
+  };
 
-  const productState = useSelector((state) => state.product.products);
   const [searchTerm, setSearchTerm] = useState("");
   const handleEditClick = (product) => {
     navigate(`/admin/product/${product.title}`, { state: { product } });
   };
-  console.log(productState);
-  const data = productState?.products?.filter((product) => {
+  //console.log(productState);
+  const data = productState?.products
+    ?.filter((product) => {
       const { title, category } = product;
       const lowerCaseTerm = searchTerm.toLowerCase();
       return (

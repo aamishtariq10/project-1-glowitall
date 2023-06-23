@@ -104,7 +104,7 @@ const Addproduct = () => {
     });
   }
   useEffect(() => {
-    formik.values.color = color ? color : " ";
+    formik.values.color = color ? color : "";
     formik.values.images = img;
     console.log("image", img);
   }, [color, img]);
@@ -119,7 +119,6 @@ const Addproduct = () => {
       tags: product?.tags || "",
       color: color,
       productType: product?.productType || "",
-
       quantity: product?.quantity || "",
       images: img || [],
     },
@@ -134,7 +133,7 @@ const Addproduct = () => {
         if (res.data.status == 200) {
           toast.info(res.data.message, { autoClose: 1500 });
           setTimeout(() => {
-            navigate("/admin/list-product");
+            window.location.href = "http://localhost:3001/admin/list-product";
           }, 1000);
         } else {
           toast.error(res.data.message, { autoClose: 1500 });
@@ -142,7 +141,7 @@ const Addproduct = () => {
       } else {
         dispatch(createProducts(values));
         setTimeout(() => {
-          navigate("/admin/list-product");
+          window.location.href = "http://localhost:3001/admin/list-product";
         }, 1000);
         formik.resetForm();
         setSelectedOptions([]);
@@ -198,6 +197,13 @@ const Addproduct = () => {
     setColor(e);
     console.log(color);
   };
+  // useEffect(() => {
+  //   if (product) {
+  //     // const colors = product?.color.map((c) => c.title);
+
+  //     setColor(product?.color);
+  //   }
+  // }, []);
   const handleSelectedOptions = (options) => {
     console.log("Selected Options:", options);
     setSelectedOptions(options);

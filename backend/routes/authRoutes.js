@@ -1,5 +1,7 @@
 const { Router } = require("express");
 const express = require("express");
+const multer = require("multer");
+const upload = multer({ dest: "ProfilePics/" });
 const {
   createUser,
   verifyOTP,
@@ -29,6 +31,7 @@ const {
   updateOrderStatus,
   updateOrder,
   getAllOrders,
+  uploadProfilePic,
 } = require("../controller/userCtrl");
 const { checkout, paymentVerification } = require("../controller/paymentCtrl");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
@@ -39,6 +42,12 @@ router.post("/admin-login", loginAdmin);
 router.post("/cart", authMiddleware, userCart);
 router.post("/order/checkout", authMiddleware, checkout);
 router.post("/order/paymentVerification", authMiddleware, paymentVerification);
+router.post(
+  "/upload/profilePic",
+  upload.single("file"),
+  authMiddleware,
+  uploadProfilePic
+);
 router.post("/cart/create-order", authMiddleware, createOrder);
 router.put("/orders/payment/:session_id", authMiddleware, updateOrder);
 // router.delete("order/delete/:session_id", authMiddleware, deleteOrder);
