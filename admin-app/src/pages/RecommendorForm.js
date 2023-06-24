@@ -21,7 +21,12 @@ import {
   Typography,
 } from "@mui/material";
 
-const RecommendorForm = ({ selectedOption, productType, category }) => {
+const RecommendorForm = ({
+  defaultValue,
+  selectedOption,
+  productType,
+  category,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [recommendationTags, setRecommendationTags] = useState([]);
   const [questionList, setQestionsList] = useState([]);
@@ -80,6 +85,15 @@ const RecommendorForm = ({ selectedOption, productType, category }) => {
     });
   };
 
+  useEffect(() => {
+    if (defaultValue && defaultValue.length > 0) {
+      const defaultTags = questionList.map((question, index) => ({
+        questionIndex: index,
+        option: defaultValue[index] || "",
+      }));
+      setRecommendationTags(defaultTags);
+    }
+  }, [defaultValue, questionList]);
   return (
     <div>
       <Typography variant="h6" component="p">
@@ -114,8 +128,8 @@ const RecommendorForm = ({ selectedOption, productType, category }) => {
                     <FormControlLabel
                       key={optionIndex}
                       control={
-                        <Radio
-                          checked={
+                        <Radio     
+                        checked={
                             recommendationTags.find(
                               (tag) => tag.questionIndex === questionIndex
                             )?.option === option

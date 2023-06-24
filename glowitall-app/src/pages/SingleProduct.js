@@ -48,31 +48,22 @@ const SingleProduct = () => {
   }, []);
 
   const uploadCart = async () => {
-    if (color === null) {
+    if (!productState.category.includes("skincare") && color === null) {
       toast.error("Please choose color!");
       return false;
-    } else {
-      const data = {
-        productId: productState._id,
-        quantity,
-        price: productState.price,
-        color: productState.color[0]._id,
-      };
-      const res = dispatch(addProductToCart(data));
-      console.log(" product add to cart response", res);
-      // const res = useDispatch(addProductToCart);
-      // const header = localStorage.getItem("userToken");
-      // const response = await axios.post(`http://localhost:5000/api/user/cart`,{productId:productState._id,quantity,price:productState.price,color:productState.color[0]._id},{
-      //     headers: {
-      //         "userToken": header
-      //     }try {
-      // }
-      // );
-      // toast.success("Product Added to Cart");
-      // dispatch(addProductToCart({productId:productState?._id, color, quantity}))
-      // navigate('/cart')
     }
+
+    const data = {
+      productId: productState._id,
+      quantity,
+      price: productState.price,
+      color: productState.category.includes("skincare") ? null : color,
+    };
+
+    const res = dispatch(addProductToCart(data));
+    console.log("product add to cart response", res);
   };
+  console.log("productState", productState);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,8 +84,8 @@ const SingleProduct = () => {
 
   const props = {
     width: 400,
-    height: 600,
-    zoomWidth: 600,
+    height: 400,
+    zoomWidth: 400,
     img: productState?.images[0]?.url
       ? productState?.images[0]?.url
       : "https://www.shutterstock.com/image-photo/lipstick-fashion-colorful-lipsticks-over-260nw-1017284011.jpg",
@@ -169,7 +160,7 @@ const SingleProduct = () => {
                   edit={false}
                   activeColor="#ffd700"
                 />
-                <p className="mb-0 t-review">(4 Reviews)</p>
+                {/* <p className="mb-0 t-review">(4 Reviews)</p> */}
               </div>
               <a className="review-btn" href="#review">
                 Write a Review
@@ -383,11 +374,10 @@ const SingleProduct = () => {
           </div>
         </div>
       </Container>
-
       <Container class1="popular-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Our Popular Products</h3>
+            <h3 className="section-heading">Our Featured Products</h3>
           </div>
           <FeaturedProducts data={resData} grid={6} />
         </div>

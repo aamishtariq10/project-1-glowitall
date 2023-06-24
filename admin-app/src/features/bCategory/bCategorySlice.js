@@ -48,7 +48,7 @@ export const deleteABlogCat = createAsyncThunk(
   "blogCategory/delete-categories",
   async (id,thunkAPI) => {
     try {
-      return await bCategoryService.deleteABlogCat(id);
+      return await bCategoryService.deleteCategory(id);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }

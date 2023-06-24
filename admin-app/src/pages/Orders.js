@@ -2,20 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Table, Input, Popconfirm } from "antd";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import {
-  TextField,
-  Select,
-  FormControl,
-  Typography,
-  InputLabel,
-  Autocomplete,
-  Button,
-  MenuItem,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { BiEdit } from "react-icons/bi";
-import { AiFillDelete } from "react-icons/ai";
-import { Link } from "react-router-dom";
 import { getOrders } from "../features/auth/authSlice";
 import { base_url } from "../utils/base_url";
 import { config } from "../utils/axiosconfig";
@@ -31,7 +19,7 @@ const columns = [
     render: (user) => (
       <div>
         <p>
-          {user.firstName} {user.lastLame}
+          {user?.firstName} {user?.lastName}
         </p>
       </div>
     ),
@@ -41,7 +29,7 @@ const columns = [
     dataIndex: "email",
     render: (user) => (
       <div>
-        <p>{user.email}</p>
+        <p>{user?.email}</p>
       </div>
     ),
   },
@@ -61,34 +49,51 @@ const columns = [
     render: (products) => (
       <ul>
         {products.map((product, index) => (
-          <li key={index}>{product.title}</li>
+          <li key={index}>
+            {product?.title} - Quantity: {product?.quantity}
+          </li>
         ))}
       </ul>
     ),
   },
+
+  {
+    title: "Color",
+    dataIndex: "color",
+    render: (color) => (
+      <div>
+        {color &&
+          color.map((c, index) => {
+            if (c && c.title && c.title !== null) {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    backgroundColor: Array.isArray(c.title)
+                      ? c.title.title
+                      : c.title.title,
+                    width: "20px",
+                    height: "20px",
+                    borderRadius: "50%",
+                    display: "inline-block",
+                    marginRight: "5px",
+                  }}
+                >
+                  {/* {c?.title.title} Display the specific property */}
+                </div>
+              );
+            }
+            return null;
+          })}
+      </div>
+    ),
+  },
+
   {
     title: "Amount",
     dataIndex: "amount",
     render: (amount) => <p>${amount}</p>,
   },
-  // {
-  //   title: "Color",
-  //   dataIndex: "color",
-  //   render: (color) =>
-  //     color.map((c, index) => (
-  //       <div
-  //         key={index}
-  //         style={{
-  //           backgroundColor: c.title,
-  //           width: "20px",
-  //           height: "20px",
-  //           borderRadius: "50%",
-  //           display: "inline-block",
-  //           marginRight: "5px",
-  //         }}
-  //       />
-  //     )),
-  // },
   {
     title: "created At",
     dataIndex: "createdAt",
@@ -133,28 +138,33 @@ const Orders = () => {
       return {
         key: index + 1,
         user: shippingInfo,
-        email: order.user,
+        email: order?.user,
         shippingInfo: shippingInfo,
-        product: order.orderItems.map((product) => ({
-          title: product.productId.title,
+        product: order?.orderItems.map((product) => ({
+          title: product?.productId?.title,
+          quantity: product?.quantity,
         })),
-        amount: order.totalPrice,
-        paymentStatus: order.paymentStatus,
-        orderStatus: order.orderStatus,
-        paidAt: new Date(order.paidAt).toLocaleString(),
-        createdAt: new Date(order.createdAt).toLocaleString(),
+        color: order?.orderItems.map((product) => ({
+          title: product?.color,
+        })),
+        amount: order?.totalPrice,
+        paymentStatus: order?.paymentStatus,
+        orderStatus: order?.orderStatus,
+        paidAt: new Date(order?.paidAt).toLocaleString(),
+        createdAt: new Date(order?.createdAt).toLocaleString(),
         action: (
           <>
-            {order.orderStatus === "Ordered" && (
+            {order?.orderStatus === "Ordered" && (
               <Button onClick={() => handleUpdateStatus(order)}>
                 Update status to delivered
               </Button>
             )}
-            {order.orderStatus === "delivered" && <span>Order Delivered</span>}
+            {order?.orderStatus === "delivered" && <span>Order Delivered</span>}
           </>
         ),
       };
     });
+  console.log(data);
 
   const handleUpdateStatus = async (order) => {
     try {

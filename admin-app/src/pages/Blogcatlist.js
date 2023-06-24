@@ -25,22 +25,6 @@ const columns = [
   {
     title: "Action",
     dataIndex: "action",
-    render: (text, record) => (
-      <>
-        <Link
-          to={`/admin/blog-category/${record.id}`}
-          className=" fs-3 text-danger"
-        >
-          <BiEdit />
-        </Link>
-        <button
-          className="ms-3 fs-3 text-danger bg-transparent border-0"
-          onClick={() => showModal(record.id)}
-        >
-          <AiFillDelete />
-        </button>
-      </>
-    ),
   },
 ];
 
@@ -58,10 +42,6 @@ const Blogcatlist = () => {
   };
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(resetState());
-    dispatch(getCategories());
-  }, [dispatch]);
 
   const bCatState = useSelector((state) => state.bCategory.bCategories);
   const [searchTerm, setSearchTerm] = useState("");
@@ -74,13 +54,35 @@ const Blogcatlist = () => {
       key: index + 1,
       id: category._id,
       name: category.title,
+      action: (
+        <>
+          <Link
+            to={`/admin/blog-category/${category._id}`}
+            className=" fs-3 text-danger"
+          >
+            <BiEdit />
+          </Link>
+          <button
+            className="ms-3 fs-3 text-danger bg-transparent border-0"
+            onClick={() => showModal(category._id)}
+          >
+            <AiFillDelete />
+          </button>
+        </>
+      ),
     }));
 
   const deleteBlogCategory = (id) => {
     dispatch(deleteABlogCat(id));
+    dispatch(getCategories());
+    window.location.reload();
     setOpen(false);
   };
 
+  useEffect(() => {
+    dispatch(resetState());
+    dispatch(getCategories());
+  }, [dispatch]);
   const handleSearch = (value) => {
     setSearchTerm(value);
   };
@@ -100,7 +102,9 @@ const Blogcatlist = () => {
       <CustomModal
         hideModal={hideModal}
         open={open}
-        performAction={() => deleteBlogCategory(blogCatId)}
+        performAction={() => {
+          deleteBlogCategory(blogCatId);
+        }}
         title="Are you sure you want to delete this blog category?"
       />
     </div>

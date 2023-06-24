@@ -60,7 +60,7 @@ const Cart = () => {
 
   const deleteACartProduct = (id) => {
     dispatch(deleteCartProduct(id));
-     window.location.reload();
+    window.location.reload();
     fetchUserCart();
   };
   console.log(cartProducts);
@@ -102,7 +102,7 @@ const Cart = () => {
                   <div className="cart-col-1 gap-15 d-flex align-items-center">
                     <div className="w-50">
                       <img
-                        src={item.productId.images[0].url}
+                        src={item?.productId?.images[0]?.url}
                         alt="moisturizer"
                         style={{ width: "250px", height: "200px" }}
                       />

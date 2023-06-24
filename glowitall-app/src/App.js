@@ -98,7 +98,6 @@ function App() {
             <Route path="Start-lipstick" element={<LipstickFinder />} />
             <Route path="Start-lash" element={<LashFinder />} />
             <Route path="skincarequiz" element={<SkinCareQuiz />} />
-
             <Route path="found-Q1" element={<FoundationQuiz />} />
             <Route path="Mas-Q1" element={<MascaraQuiz />} />
             <Route path="Lash-Q1" element={<LashQuiz />} />

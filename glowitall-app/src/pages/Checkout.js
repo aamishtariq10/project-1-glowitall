@@ -29,7 +29,7 @@ const Checkout = () => {
   const dispatch = useDispatch();
   const cartState = useSelector((state) => state.auth.cartProducts);
   const [totalAmount, setTotalAmount] = useState(null);
-  const [shippingInfo, setShippingInfo] = useState(null);
+  const [shippingInfo, setShippingInfo] = useState([]);
   const [paymentId, setPaymentId] = useState("");
   const [successfullpayment, setSuccessfullpayment] = useState(false);
   const [cartProductState, setCartProductState] = useState([]);
@@ -56,6 +56,7 @@ const Checkout = () => {
     },
     validationSchema: shippingSchema,
     onSubmit: (values) => {
+      console.log(values);
       if (totalAmount < 5) {
         toast.info("please select products first");
         return;
@@ -65,10 +66,13 @@ const Checkout = () => {
       setShippingInfo(values);
       setTimeout(() => {
         checkOutHandler();
-      }, 300);
+      }, 3000);
     },
   });
-  
+  useEffect(() => {
+    setShippingInfo(formik.values);
+  }, [formik.values]);
+  console.log(shippingInfo);
   const loadScript = (src) => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -87,12 +91,13 @@ const Checkout = () => {
     let items = [];
     for (let index = 0; index < cartState?.length; index++)
       items.push({
-        product: cartState[index].productId._id,
-        quantity: cartState[index].quantity,
-        color: cartState[index].color._id,
-        price: cartState[index].price._id,
+        product: cartState[index]?.productId._id,
+        quantity: cartState[index]?.quantity,
+        color: cartState[index]?.color,
+        price: cartState[index]?.price,
       });
   }, [cartState]);
+  console.log(cartState);
   const checkOutHandler = async () => {
     const result = await axios.post(
       "http://localhost:5000/api/user/order/checkout",
@@ -182,6 +187,7 @@ const Checkout = () => {
                       className="form-control form-select"
                       id=""
                     >
+                      color
                       <option value="" selected disabled>
                         Select Country
                       </option>
@@ -344,8 +350,12 @@ const Checkout = () => {
                             />
                           </div>
                           <div>
-                            <h5 className="title">{item?.productId?.title}</h5>
-                            <p className="total-price">{item?.color?.title}</p>
+                            <h5 className="title">{item?.productId.title}</h5>
+                            <ul className="colors ps-0">
+                              <li
+                                style={{ backgroundColor: item?.color?.title }}
+                              ></li>
+                            </ul>
                           </div>
                         </div>
                         <div className="flex-grow-1">

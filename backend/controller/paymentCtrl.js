@@ -6,7 +6,7 @@ const stripe = require("stripe")(
    key_id:"", key_secret:""
 })*/
 // SECRET_KEY = sk_test_51NHL7pLcJt15HlXsKtLQESaXOeOX0TJ79UT513OuvOuyAhrCNUOMs9iPeXG1axUHvuTAxnLoEufTiqhCgIUNJSQy00r5kdw1n0
-//
+//l
 const checkout = async (req, res) => {
   const { amount } = req.body;
   const amountInCents = amount * 100; // Convert amount from dollars to cents

@@ -30,6 +30,7 @@ const Brandlist = () => {
   const [open, setOpen] = useState(false);
   const [brandId, setbrandId] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [deletionStatus, setDeletionStatus] = useState(false);
 
   const showModal = (e) => {
     setOpen(true);
@@ -42,14 +43,16 @@ const Brandlist = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(resetState());
     dispatch(getBrands());
-  }, []);
+    dispatch(resetState());
+  }, [dispatch, deletionStatus]);
 
   const brandState = useSelector((state) => state.brand.brands);
 
   const data1 = brandState
-    .filter((brand) => brand.title.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter((brand) =>
+      brand.title.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     .map((brand, index) => ({
       key: index + 1,
       name: brand.title,
@@ -68,14 +71,13 @@ const Brandlist = () => {
       ),
     }));
 
-  const deleteBrand = (brandId) => {
-    dispatch(deleteBrandAction(brandId));
-    setOpen(false);
-    setTimeout(() => {
-      dispatch(getBrands());
-    }, 100);
-  };
-
+    const deleteBrand = (brandId) => {
+      dispatch(deleteBrandAction(brandId));
+      setDeletionStatus(true);
+      setOpen(false);
+      
+    };
+  
   return (
     <div>
       <h3 className="mb-4 title">Brands </h3>

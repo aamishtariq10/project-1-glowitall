@@ -70,8 +70,9 @@ const Addblogcat = () => {
         dispatch(updateABlogCat(data));
         dispatch(resetState());
         setTimeout(() => {
+
           toast.success("Blog Category Updated Successfullly!");
-          navigate("/admin/blog-category-list");
+          // navigate("/admin/blog-category-list");
         }, 300);
       } else {
         console.log("values", values);

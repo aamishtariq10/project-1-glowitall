@@ -69,7 +69,6 @@ var orderSchema = new mongoose.Schema(
         color: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Color",
-          required: true,
         },
         quantity: {
           type: Number,

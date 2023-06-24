@@ -79,13 +79,13 @@ const Vieworder = () => {
   return (
     <div>
     <h3 className="mb-4 title">View Order </h3>
-    <Search
+    {/* <Search
         placeholder="Search by title or category"
         allowClear
         enterButton
         onSearch={handleSearch}
         style={{ width: 200, marginBottom: 16 }}
-      />
+      /> */}
     <div>
       <Table columns={columns} dataSource={data1} />
     </div>

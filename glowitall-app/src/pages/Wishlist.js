@@ -22,7 +22,6 @@ const Wishlist = () => {
       dispatch(getUserProductWishlist());
     }, 300);
   };
-
   return (
     <>
       <Meta title={"Wishlist"} />
@@ -46,11 +45,10 @@ const Wishlist = () => {
                       style={{ width: "30px" }}
                       className="position-absolute cross img-fluid"
                     />
-
                     <div className="wishlist-card-image bg-white">
                       <img
                         src={
-                          item?.images[0]?.url
+                          item?.images
                             ? item?.images[0]?.url
                             : "Images/moisturizer.jpeg"
                         }

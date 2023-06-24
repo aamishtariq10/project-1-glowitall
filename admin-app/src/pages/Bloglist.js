@@ -76,7 +76,7 @@ const Bloglist = () => {
 
   const deleteBlog = (e) => {
     dispatch(deleteABlog(e));
-
+    window.location.reload();
     setOpen(false);
     setTimeout(() => {
       dispatch(getBlogs());

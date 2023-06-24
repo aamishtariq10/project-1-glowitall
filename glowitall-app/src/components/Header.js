@@ -19,7 +19,7 @@ const Header = () => {
   const productState = useSelector((state) => state?.product?.product);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
   const user = localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user")).firstname
+    ? JSON.parse(localStorage.getItem("user"))
     : null;
   // const [profilePicture, setProfilePicture] = useState(userState?.profilePicture);
   const [paginate, setPaginate] = useState(true);
@@ -121,7 +121,7 @@ const Header = () => {
                   {authState?.user === null ? (
                     <p className="mb-0">Login </p>
                   ) : (
-                    <p className="mb-0">Welcome {user}</p>
+                    <p className="mb-0">Welcome {user?.firstname}</p>
                   )}
                 </Link>
                 <div className="dropdown">
@@ -132,7 +132,19 @@ const Header = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <RiAccountCircleLine className="fs-2" />
+                    <img
+                      src={
+                        user
+                          ? user?.profile
+                          : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                      }
+                      alt=""
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                      }}
+                    />
                   </button>
 
                   <ul
@@ -144,11 +156,18 @@ const Header = () => {
                         My Profile
                       </NavLink>
                     </li>
-                    <li>
-                      <NavLink className="dropdown-item" onClick={handleLogout}>
-                        Logout
-                      </NavLink>
-                    </li>
+                    {authState?.user ? (
+                      <li>
+                        <NavLink
+                          className="dropdown-item"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </NavLink>
+                      </li>
+                    ) : (
+                      <p className="mb-0"></p>
+                    )}
                   </ul>
                 </div>
               </div>

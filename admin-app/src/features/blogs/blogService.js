@@ -8,11 +8,7 @@ const createBlog = async (blog) => {
 };
 
 const updateBlog = async (blog) => {
-  const response = await axios.put(
-    `${base_url}blog/${blog.id}`,
-    { title: blog.blogData.title },
-    config
-  );
+  const response = await axios.put(`${base_url}blog/${blog.id}`, blog, config);
   return response.data;
 };
 

@@ -40,18 +40,6 @@ const Addblog = () => {
   const imgState = useSelector((state) => state.upload.images);
   const bCatState = useSelector((state) => state.bCategory.bCategories);
   const blogState = useSelector((state) => state.blogs);
-  // const blogState = {
-  //   isSuccess: false,
-  //   isError: false,
-  //   isLoading: false,
-  //   createdBlog: {},
-  //   blogName: "",
-  //   blogDesc: "",
-  //   blogCategory: "",
-  //   blogImages: [],
-  //   updatedBlog: {},
-  // };
-  console.log(blogState);
   const {
     isSuccess,
     isError,
@@ -63,75 +51,80 @@ const Addblog = () => {
     blogCategory,
     blogImages,
   } = blogState;
-
-  const img = []; // Initialize img array here
+  const [img, setImg] = useState([]);
+  useEffect(() => {
+    if (blogImages) {
+      setImg(blogImages); // Set blog images if available
+    }
+  }, [blogImages]);
 
   useEffect(() => {
     if (getBlogId !== undefined) {
       dispatch(getABlog(getBlogId));
-      img.push(blogImages);
     } else {
       dispatch(resetState());
     }
   }, [getBlogId]);
 
   useEffect(() => {
-    dispatch(resetState());
+    // dispatch(resetState());
     dispatch(getCategories());
   }, []);
 
+  const handleDrop = (acceptedFiles) => {
+    dispatch(uploadImg(acceptedFiles));
+  };
   useEffect(() => {
-    if (isSuccess && createdBlog) {
-      toast.success("Blog Added Successfullly!");
-    }
-    if (isSuccess && updatedBlog) {
-      toast.success("Blog Updated Successfullly!");
-      navigate("/admin/blog-list");
-    }
-    if (isError) {
-      toast.error("Something Went Wrong!");
-    }
-  }, [isSuccess, isError, isLoading]);
+    if (imgState) {
+      const existingImages = imgState.map((image) => ({
+        public_id: image.public_id,
+        url: image.url,
+      }));
 
-  imgState.forEach((i) => {
-    img.push({
-      public_id: i.public_id,
-      url: i.url,
-    });
-  });
-  console.log(img);
-
-  useEffect(() => {
-    formik.values.images = img;
-  }, [blogImages]);
-
+      setImg((prevImages) => [...prevImages, ...existingImages]);
+    }
+  }, [imgState]);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       title: blogName || "",
       description: blogDesc || "",
       category: blogCategory || "",
-      images: blogImages || img,
+      images: img,
     },
     validationSchema: schema,
     onSubmit: (values) => {
       if (getBlogId !== undefined) {
         const data = { id: getBlogId, blogData: values };
         dispatch(updateBlog(data));
-        navigate("/admin/blog-list");
-
+        toast.success("Blog Updated Successfully!");
+        setTimeout(() => {
+          navigate("/admin/blog-list");
+        }, 1000);
         dispatch(resetState());
       } else {
         dispatch(createBlog(values));
         formik.resetForm();
-
+        toast.success("Blog Added Successfully!");
         setTimeout(() => {
           dispatch(resetState());
           window.location.href = "http://localhost:3001/admin/blog-list";
-        }, 3000);
+        }, 1000);
       }
     },
   });
+
+  console.log("============> blogImages", getBlogId);
+  console.log("============> blogImages", blogImages);
+  console.log("============> img", img);
+  console.log("============>", formik.values);
+  const handleDeleteImage = (publicId) => {
+    dispatch(deleteImg(publicId));
+
+    setImg((prevImages) =>
+      prevImages.filter((image) => image.public_id !== publicId)
+    );
+  };
 
   return (
     <div>
@@ -209,9 +202,7 @@ const Addblog = () => {
             <Typography variant="h6" component="h6">
               Select Pictures for Blog
             </Typography>
-            <Dropzone
-              onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}
-            >
+            <Dropzone onDrop={handleDrop}>
               {({ getRootProps, getInputProps }) => (
                 <section>
                   <div {...getRootProps()}>
@@ -225,12 +216,12 @@ const Addblog = () => {
             </Dropzone>
           </div>
           <div className="showimages d-flex flex-wrap mt-3 gap-3">
-            {imgState?.map((i, j) => {
+            {img?.map((i, j) => {
               return (
                 <div className=" position-relative" key={j}>
                   <button
                     type="button"
-                    onClick={() => dispatch(deleteImg(i.public_id))}
+                    onClick={() => handleDeleteImage(i.public_id)}
                     className="btn-close position-absolute"
                     style={{ top: "10px", right: "10px" }}
                   ></button>

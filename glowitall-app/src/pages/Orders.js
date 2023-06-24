@@ -90,7 +90,11 @@ const Orders = () => {
                                   <div className="col-3">
                                     <ul className="colors ps-0">
                                       <li
-                                        style={{ backgroundColor: i?.color }}
+                                        style={{
+                                          backgroundColor: i?.color
+                                            ? i.color.title
+                                            : "",
+                                        }}
                                       ></li>
                                     </ul>
                                   </div>

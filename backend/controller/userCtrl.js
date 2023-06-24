@@ -493,6 +493,10 @@ const createOrder = asyncHandler(async (req, res) => {
           message: `Insufficient quantity available for product  ${product.brand}`,
         });
       }
+
+      if (product.category.includes("skincare")) {
+        orderItem.color = null;
+      }
     } else {
       return res.status(404).json({
         success: false,
@@ -578,6 +582,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
 const getAllOrders = asyncHandler(async (req, res) => {
   try {
     const orders = await Order.find({ paymentStatus: "paid" })
+      .sort({ createdAt: -1 })
       .populate("user")
       .populate("orderItems.productId")
       .populate("orderItems.color");
@@ -586,6 +591,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+
 
 /*const emptyCart = asyncHandler(async (req, res) => {
   const { id } = req.user;

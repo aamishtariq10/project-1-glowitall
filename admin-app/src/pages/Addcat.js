@@ -102,13 +102,14 @@ const Addcat = () => {
             type="text"
             label="Enter Product Category"
             id="category"
-            onChange={formik.handleChange("title")}
+            onChange={(event) =>
+              formik.handleChange("title")(event.target.value.toLowerCase())
+            }
             onBlur={formik.handleBlur("title")}
             value={formik.values.title}
             error={formik.touched.title && formik.errors.title}
             helperText={formik.touched.title && formik.errors.title}
           />
-
           <div>
             <Button
               variant="contained"

@@ -175,7 +175,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
     }
-    const deleteProduct = await Product.findOneAndDelete(productId);
+    const deleteProduct = await Product.findOneAndDelete({ _id: productId });
     if (deleteProduct) {
       res.json({
         status: 200,

@@ -72,6 +72,7 @@ const Colorlist = () => {
   }));
 
   const deleteColor = (e) => {
+    dispatch(getColors());
     dispatch(deleteAColor(e));
 
     setOpen(false);

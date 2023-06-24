@@ -31,7 +31,7 @@ import axios from "axios";
 let schema = yup.object().shape({
   title: yup.string().required("Title is Required"),
   description: yup.string().required("Description is Required"),
-  price: yup.number().required("Price is Required"),
+  price: yup.number().min(0).required("Price is Required"),
   brand: yup.string().required("Brand is Required"),
   category: yup.string().required("Category is Required"),
   tags: yup.string().required("Tag is Required"),
@@ -41,7 +41,7 @@ let schema = yup.object().shape({
     .array()
     .min(1, "Pick at least one color")
     .required("Color is Required"),
-  quantity: yup.number().required("Quantity is Required"),
+  quantity: yup.number().min(1),
 });
 
 const skinType = ["fundation", "blush"];
@@ -50,27 +50,29 @@ const eyesType = ["lash", "mascara"];
 const Addproduct = () => {
   const location = useLocation();
   const product = location?.state?.product;
-  console.log(product);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [color, setColor] = useState([]);
   const [showProductType, setShowProductType] = useState(false);
   const [typeOptions, setTypeOptions] = useState(false);
   const [showQuestionare, setShowQuestionare] = useState(false);
-
-  // const [images, setImage] = useState(); // Set initial value from product.images
   useEffect(() => {
     dispatch(getBrands());
     dispatch(getCategories());
     dispatch(getColors());
   }, []);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState(
+    product?.recommendations || []
+  );
   const brandState = useSelector((state) => state.brand.brands);
   const catState = useSelector((state) => state.pCategory.pCategories);
   const colorState = useSelector((state) => state.color.colors);
   const imgState = useSelector((state) => state.upload.images);
   const newProduct = useSelector((state) => state.product);
   const { isSuccess, isError, isLoading, createdProduct } = newProduct;
+  const [color, setColor] = useState([]);
+  const [image, setImage] = useState([]);
+  const [colorOpt, setColorOpt] = useState([]);
+  const [hideColor, setHideColor] = useState(false);
   useEffect(() => {
     if (isSuccess && createdProduct) {
       toast.success("Product Added Successfullly!");
@@ -79,35 +81,46 @@ const Addproduct = () => {
       toast.error("Something Went Wrong!");
     }
   }, [isSuccess, isError, isLoading]);
-  const coloropt = [];
-  colorState.forEach((i) => {
-    coloropt.push({
-      label: i.title,
-      value: i._id,
-    });
-  });
-  console.log("add product", selectedOptions);
-  const img = [];
-  imgState.forEach((i) => {
-    img.push({
-      public_id: i.public_id,
-      url: i.url,
-    });
-  });
-
-  if (product && product.images && Array.isArray(product.images)) {
-    product.images.forEach((image) => {
-      img.push({
+  useEffect(() => {
+    if (colorState) {
+      const colorsP = colorState?.map((image) => ({
+        label: image.title,
+        value: image._id,
+      }));
+      setColorOpt(colorsP);
+    }
+  }, [colorState]);
+  useEffect(() => {
+    if (product) {
+      const productimg = product?.images?.map((image) => ({
         public_id: image.public_id,
         url: image.url,
-      });
-    });
-  }
+      }));
+      const colors = product?.color?.map((color) => ({
+        label: color.title,
+        value: color._id,
+      }));
+      setColor(colors);
+      setImage(productimg);
+    }
+  }, [product]);
+
+  const handleDrop = (acceptedFiles) => {
+    dispatch(uploadImg(acceptedFiles));
+  };
+
+  useEffect(() => {
+    const existingImages = imgState.map((image) => ({
+      public_id: image.public_id,
+      url: image.url,
+    }));
+    setImage((prevImages) => [...prevImages, ...existingImages]);
+  }, [imgState]);
+
   useEffect(() => {
     formik.values.color = color ? color : "";
-    formik.values.images = img;
-    console.log("image", img);
-  }, [color, img]);
+    formik.values.images = image;
+  }, [color, image]);
 
   const formik = useFormik({
     initialValues: {
@@ -117,10 +130,10 @@ const Addproduct = () => {
       brand: product?.brand || "",
       category: product?.category || "",
       tags: product?.tags || "",
-      color: color,
+      color: color || "",
       productType: product?.productType || "",
       quantity: product?.quantity || "",
-      images: img || [],
+      images: image || [],
     },
     validationSchema: schema,
     onSubmit: async (values) => {
@@ -140,10 +153,12 @@ const Addproduct = () => {
         }
       } else {
         dispatch(createProducts(values));
-        setTimeout(() => {
-          window.location.href = "http://localhost:3001/admin/list-product";
-        }, 1000);
+        if (isSuccess)
+          setTimeout(() => {
+            window.location.href = "http://localhost:3001/admin/list-product";
+          }, 1000);
         formik.resetForm();
+        setImage([]);
         setSelectedOptions([]);
       }
     },
@@ -152,17 +167,6 @@ const Addproduct = () => {
   const handledesc = (e) => {
     setDesc(e);
   };
-  useEffect(() => {
-    formik.values.recommendations = product
-      ? product.recommendations
-      : selectedOptions;
-    if (product) {
-      setSelectedOptions(product?.recommendations);
-    }
-  }, [selectedOptions]);
-
-  console.log(product);
-  console.log(formik.values);
   useEffect(() => {
     if (formik.values.category.includes("face makeup")) {
       setShowProductType(true);
@@ -191,24 +195,33 @@ const Addproduct = () => {
     } else {
       setShowQuestionare(false);
     }
+    if (type.includes("skincare")) {
+      setHideColor(true);
+    } else {
+      setHideColor(false);
+    }
   }, [formik.values.category]);
 
-  const handleColors = (e) => {
-    setColor(e);
-    console.log(color);
+  const handleColors = (selectedOptions) => {
+    setColor(selectedOptions);
   };
-  // useEffect(() => {
-  //   if (product) {
-  //     // const colors = product?.color.map((c) => c.title);
-
-  //     setColor(product?.color);
-  //   }
-  // }, []);
   const handleSelectedOptions = (options) => {
-    console.log("Selected Options:", options);
     setSelectedOptions(options);
   };
-  // console.log("product----------<",product )
+  const handleDeleteImage = (publicId) => {
+    dispatch(deleteImg(publicId));
+
+    const imgs = image.filter((image) => image.public_id !== publicId);
+    setImage(imgs);
+  };
+
+  /*        =============consoles====================             */
+
+  // console.log("=========>product state", product);
+  // console.log("=========> color opt", colorOpt);
+  // console.log("=========>color state", colorState);
+  // console.log("===========>", color);
+
   return (
     <div>
       {product ? (
@@ -257,14 +270,16 @@ const Addproduct = () => {
             </Typography>
             <TextField
               type="number"
-              label="price"
+              label="Price"
               name="price"
+              min={0}
               className="form-control"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.price}
               error={formik.touched.price && Boolean(formik.errors.price)}
               helperText={formik.touched.price && formik.errors.price}
+              inputMode="decimal"
             />
           </FormControl>
           <Typography variant="h6" component="h6">
@@ -357,6 +372,7 @@ const Addproduct = () => {
                 <RecommendorForm
                   selectedOption={handleSelectedOptions}
                   productType={formik.values.productType}
+                  defaultvalue={selectedOptions}
                   category={formik.values.category}
                 />
               </div>
@@ -396,48 +412,40 @@ const Addproduct = () => {
               <MenuItem value="special">Special</MenuItem>
             </Select>
           </FormControl>
-
-          <Typography variant="h6" component="h6">
-            Select Colors
-          </Typography>
-          <Autocomplete
-            multiple
-            fullWidth
-            options={coloropt}
-            defaultValue={product?.color.map((c) => c.title)}
-            onChange={(event, value) => handleColors(value)}
-            isOptionEqualToValue={(option, value) => option.value === value}
-            // renderOption={(option, title) => (
-            //   <div style={{ background: option.title }} className="option">
-            //     {option.title}
-            //   </div>
-            // )}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select Colors"
-                placeholder="Select colors"
+          {!hideColor == true && (
+            <>
+              <Typography variant="h6" component="h6">
+                Select Colors
+              </Typography>
+              <Autocomplete
+                multiple
+                fullWidth
+                options={colorOpt.filter(
+                  (option) => !color.includes(option.value)
+                )}
+                value={color}
+                onChange={(event, value) => handleColors(value)}
+                getOptionLabel={(option) => option.label}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Colors"
+                    placeholder="Select colors"
+                  />
+                )}
+                renderOption={(props, option, { selected }) => (
+                  <li
+                    {...props}
+                    style={{
+                      backgroundColor: !selected ? option.label : "transparent",
+                    }}
+                  >
+                    {option.label}
+                  </li>
+                )}
               />
-            )}
-          />
-
-          {/* <Autocomplete
-            multiple
-            allowClear
-            className="w-100"
-            placeholder="Select colors"
-            options={coloropt}
-            defaultValue={product?.color.map((c) => c.title)}
-            onChange={(event, value) => handleColors(value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select Colors"
-                placeholder="Select colors"
-              />
-            )}
-          /> */}
-
+            </>
+          )}
           <div className="error">
             {formik.touched.color && formik.errors.color}
           </div>
@@ -458,9 +466,7 @@ const Addproduct = () => {
           />
 
           <div className="bg-white border-1 p-5 text-center">
-            <Dropzone
-              onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}
-            >
+            <Dropzone onDrop={handleDrop}>
               {({ getRootProps, getInputProps }) => (
                 <section>
                   <div {...getRootProps()}>
@@ -474,12 +480,12 @@ const Addproduct = () => {
             </Dropzone>
           </div>
           <div className="showimages d-flex flex-wrap gap-3">
-            {img?.map((i, j) => {
+            {image?.map((i, j) => {
               return (
                 <div className="position-relative" key={j}>
                   <button
                     type="button"
-                    onClick={() => dispatch(deleteImg(i.public_id))}
+                    onClick={() => handleDeleteImage(i.public_id)}
                     className="btn-close position-absolute"
                     style={{ top: "10px", right: "10px" }}
                   ></button>

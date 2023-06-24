@@ -83,12 +83,10 @@ const ProductList = () => {
       toast.error("Internal Server Error");
     }
   };
-
   const [searchTerm, setSearchTerm] = useState("");
   const handleEditClick = (product) => {
     navigate(`/admin/product/${product.title}`, { state: { product } });
   };
-  //console.log(productState);
   const data = productState?.products
     ?.filter((product) => {
       const { title, category } = product;

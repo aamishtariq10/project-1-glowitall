@@ -27,7 +27,7 @@ const Profile = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   console.log(user);
 
-  const [profilePicture, setProfilePicture] = useState(user.profile || null);
+  const [profilePicture, setProfilePicture] = useState(user?.profile || null);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
