@@ -160,7 +160,7 @@ const initialState = {
 export const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
-  reducers: {},
+  reducers: [],
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
@@ -173,9 +173,8 @@ export const authSlice = createSlice({
         state.createdUser = action.payload;
         state.message = action.payload.message;
         if (state.isSuccess === true) {
-
           const userdetails = action.payload.data;
-          console.log(userdetails)
+          console.log(userdetails);
           const user = {
             firstname: userdetails.firstname,
             lastname: userdetails.lastname,
@@ -203,9 +202,8 @@ export const authSlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.user = action.payload;
-
         if (state.isSuccess === true) {
-           console.log(action)
+          console.log(action);
           toast.info(action.payload.message);
         }
       })
@@ -214,8 +212,8 @@ export const authSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload.response.data.message;
-        if (state.isError === true) 
-           { console.log(action)
+        if (state.isError === true) {
+          console.log(action);
           toast.error(action.payload.response.data.message);
         }
       })
@@ -230,7 +228,7 @@ export const authSlice = createSlice({
 
         if (state.isSuccess === true) {
           console.log(action.payload.findUser);
-          localStorage.setItem("token", action.payload.userToken);
+          // localStorage.setItem("token", action.payload.userToken);
           const userdetails = action.payload.findUser;
           const user = {
             firstname: userdetails.firstname,
@@ -238,6 +236,7 @@ export const authSlice = createSlice({
             email: userdetails.email,
             role: userdetails.role,
             address: userdetails.address,
+            profile: userdetails.profile,
           };
           localStorage.setItem("user", JSON.stringify(user));
           toast.info(action.payload.message);
@@ -259,7 +258,7 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.wishlist = action.payload.response.data.message;
+        state.wishlist = action.payload;
       })
       .addCase(getUserProductWishlist.rejected, (state, action) => {
         state.isLoading = false;
@@ -275,8 +274,9 @@ export const authSlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.cartProducts = action.payload;
-        if (state.isSuccess) {
-          toast.info("Product Added to Cart");
+        if (state.isSuccess === true) {
+          console.log(action);
+          toast.info(action.payload.message);
         }
       })
       .addCase(addProductToCart.rejected, (state, action) => {
@@ -284,6 +284,10 @@ export const authSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
+        if (state.isError === true) {
+          console.log("action ", action);
+          toast.info(action.payload.response.data.message);
+        }
       })
       .addCase(getUserCart.pending, (state) => {
         state.isLoading = true;
@@ -318,7 +322,6 @@ export const authSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
-
         if (state.isSuccess === false) {
           toast.error("Something Went Wrong!");
         }
@@ -341,9 +344,9 @@ export const authSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
-
-        if (state.isSuccess === false) {
-          toast.error("Something Went Wrong!");
+        if (state.isError === true) {
+          console.log("action ", action);
+          toast.info(action.payload.response.data.message);
         }
       })
       .addCase(getOrders.pending, (state) => {
@@ -448,9 +451,9 @@ export const authSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
-
-        if (state.isSuccess === false) {
-          toast.error("Something Went Wrong!");
+        if (state.isError === true) {
+          console.log("action ", action);
+          toast.info(action.payload.response.data.message);
         }
       });
   },

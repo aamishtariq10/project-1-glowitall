@@ -6,6 +6,35 @@ import Container from "../components/Container";
 
 const MascaraResult = () => {
   const [grid, setGrid] = useState(3);
+  const data = [
+    {
+      _id: 1,
+      brand: "Brand 1",
+      title: "Product 1",
+      images: [
+        {
+          url: "https://dummyimage.com/500x500",
+        },
+      ],
+      totalrating: 4,
+      price: 20,
+      description: "Product 1 description",
+    },
+    {
+      _id: 2,
+      brand: "Brand 2",
+      title: "Product 2",
+      images: [
+        {
+          url: "https://dummyimage.com/500x500",
+        },
+      ],
+      totalrating: 3,
+      price: 25,
+      description: "Product 2 description",
+    },
+
+  ];
 
   return (
     <>
@@ -75,7 +104,7 @@ const MascaraResult = () => {
             </h5>
             <div className="products-list pb-5 mt-3">
               <div className="d-flex flex-wrap gap-10">
-                <MakeupCard grid={grid} />
+                <MakeupCard data={data} grid={grid} />
               </div>
             </div>
           </div>

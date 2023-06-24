@@ -27,6 +27,10 @@ var userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
+    profile: {
+      type: String,
+      default: "https://dummyimage.com/300x300/00000b/ffffff",
+    },
     otp: {
       type: Number,
     },
@@ -38,12 +42,12 @@ var userSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    address: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Address",
-      },
-    ],
+    address: {
+      type: String,
+    },
+    stripe: {
+      type: Object,
+    },
     wishlist: [
       {
         type: mongoose.Schema.Types.ObjectId,

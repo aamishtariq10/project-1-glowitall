@@ -9,10 +9,16 @@ const validateMongoDbId = require("../utils/validateMongodbId");
 const { generaterefreshToken } = require("../config/refreshtoken");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("./emailCtrl");
+const cloudinary = require("cloudinary").v2;
 const crypto = require("crypto");
 const SendEmailVerificationOTP = require("../utils/SendEmailVerificationOTP");
 //Create a user
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 const createUser = asyncHandler(async (req, res) => {
   try {
     const email = req.body.email;
@@ -181,7 +187,7 @@ const saveAddress = asyncHandler(async (req, res, next) => {
 //get all users
 const getallUser = asyncHandler(async (req, res) => {
   try {
-    const getUsers = await User.find();
+    const getUsers = await User.find({ verified: true, role: "user" });
     res.json(getUsers);
   } catch (error) {
     throw new Error(error);
@@ -220,7 +226,7 @@ const deleteaUser = asyncHandler(async (req, res) => {
 const updatedUser = asyncHandler(async (req, res) => {
   const { id } = req.user;
   validateMongoDbId(id);
-
+  // console.log(req.body);
   try {
     const updateaUser = await User.findByIdAndUpdate(
       id,
@@ -228,12 +234,14 @@ const updatedUser = asyncHandler(async (req, res) => {
         firstname: req?.body?.firstname,
         lastname: req?.body?.lastname,
         email: req?.body?.email,
+        address: req?.body?.address || [],
+        profile: req?.body?.profile,
       },
       {
         new: true,
       }
     );
-    res.json(updatedUser);
+    res.json(updateaUser);
   } catch (error) {
     throw new Error(error);
   }
@@ -328,7 +336,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
       secure: true,
       sameSite: "none",
     });
-    res.status(201).json({ findAdmin, userToken });
+    res.json({ status: 200, findAdmin, userToken });
   } else {
     throw new Error("Invalid Credentials");
   }
@@ -354,14 +362,37 @@ const userCart = asyncHandler(async (req, res) => {
   validateMongoDbId(_id);
 
   try {
-    let newCart = await new Cart({
-      userId: _id,
-      productId,
-      color,
-      price,
-      quantity,
-    }).save();
-    res.json(newCart);
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    if (quantity <= 0) {
+      return res.status(400).json({
+        message: "please select product quantity 1 or more",
+      });
+    }
+
+    if (quantity > product.quantity) {
+      return res.status(400).json({
+        message: "Not enough products available",
+      });
+    }
+
+    let cartItem = await Cart.findOne({ userId: _id, productId, color });
+
+    if (cartItem) {
+      cartItem.quantity += quantity;
+    } else {
+      cartItem = await new Cart({
+        userId: _id,
+        productId,
+        color,
+        price,
+        quantity,
+      }).save();
+    }
+
+    res.json({ message: "prodcut added to cart successfuly", cartItem });
   } catch (error) {
     throw new Error(error);
   }
@@ -401,12 +432,33 @@ const removeProductFromCart = asyncHandler(async (req, res) => {
 const updateProductQuantityFromCart = asyncHandler(async (req, res) => {
   const { _id } = req.user;
   const { cartItemId, newQuantity } = req.params;
-  validateMongoDbId(id);
+  validateMongoDbId(_id);
 
   try {
     const cartItem = await Cart.findOne({ userId: _id, _id: cartItemId });
+
+    if (!cartItem) {
+      return res.status(404).json({
+        message: "Cart item not found",
+      });
+    }
+
+    const product = await Product.findById(cartItem.productId);
+    if (!product) {
+      return res.status(400).json({
+        message: "Product not available",
+      });
+    }
+
+    if (newQuantity > product.quantity) {
+      return res.status(400).json({
+        message: "Quantity exceeds the available quantity of the product",
+      });
+    }
+
     cartItem.quantity = newQuantity;
-    cartItem.save();
+    await cartItem.save();
+
     res.json(cartItem);
   } catch (error) {
     throw new Error(error);
@@ -417,37 +469,107 @@ const createOrder = asyncHandler(async (req, res) => {
   const {
     shippingInfo,
     orderItems,
-    totalprice,
-    totalpriceAfterDiscount,
+    totalPrice,
+    totalPriceAfterDiscount,
     paymentInfo,
   } = req.body;
+  console.log(req.body);
+  const { id } = req.user;
+  validateMongoDbId(id);
+
+  // try {
+  for (const orderItem of orderItems) {
+    const product = await Product.findById(orderItem.productId);
+    if (product) {
+      if (orderItem.quantity <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: `please select products  1 or more ${product.brand}`,
+        });
+      }
+      if (orderItem.quantity > product.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `Insufficient quantity available for product  ${product.brand}`,
+        });
+      }
+
+      if (product.category.includes("skincare")) {
+        orderItem.color = null;
+      }
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: `Product with ID ${orderItem.productId} not found`,
+      });
+    }
+  }
+  const order = await Order.create({
+    shippingInfo,
+    orderItems,
+    totalPrice,
+    totalPriceAfterDiscount,
+    paymentInfo,
+    user: id,
+  });
+
+  if (order) {
+    for (const orderItem of orderItems) {
+      const product = await Product.findById(orderItem.productId);
+      if (product) {
+        if (product.quantity < 0) {
+          product.quantity = 0;
+        } else {
+          product.quantity -= orderItem.quantity;
+        }
+        await product.save();
+      }
+    }
+    await Cart.deleteMany({ userId: id });
+  }
+
+  console.log(order);
+  res.status(200).json({
+    order,
+    success: true,
+  });
+  // } catch (error) {
+  //   res.status(500).json({
+  //     success: false,
+  //     error: "internal server error",
+  //   });
+  // }
+});
+
+const updateOrder = asyncHandler(async (req, res) => {
+  const { session_id } = req.params;
+  const { paymentStatus } = req.body;
+  const Status = paymentStatus;
   const { id } = req.user;
   validateMongoDbId(id);
 
   try {
-    const order = await Order.create({
-      shippingInfo,
-      orderItems,
-      totalprice,
-      totalpriceAfterDiscount,
-      paymentInfo,
-      user: id,
-    });
-    res.json({
-      order,
-      success: true,
-    });
+    const order = await Order.findOne({ paymentInfo: session_id });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    order.paymentStatus = Status;
+    await order.save();
+
+    res.json({ message: "Order succesfully recieved", order: order });
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: "Error updating order payment status" });
   }
 });
 
 const getMyOrders = asyncHandler(async (req, res) => {
   const { id } = req.user;
   try {
-    const orders = await Order.find({ user: id })
+    const orders = await Order.find({ user: id, paymentStatus: "paid" })
       .populate("user")
-      .populate("orderItems.product")
+      .populate("orderItems.productId")
       .populate("orderItems.color");
     res.json({
       orders,
@@ -456,6 +578,20 @@ const getMyOrders = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+
+const getAllOrders = asyncHandler(async (req, res) => {
+  try {
+    const orders = await Order.find({ paymentStatus: "paid" })
+      .sort({ createdAt: -1 })
+      .populate("user")
+      .populate("orderItems.productId")
+      .populate("orderItems.color");
+    res.json(orders);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
 
 /*const emptyCart = asyncHandler(async (req, res) => {
   const { id } = req.user;
@@ -551,43 +687,50 @@ const getMyOrders = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+*/
 
-const getOrders = asyncHandler(async (req, res) => {
+const updateOrderStatus = asyncHandler(async (req, res) => {
+  const { orderStatus } = req.body;
+  const { order_id } = req.params;
   const { id } = req.user;
   validateMongoDbId(id);
 
   try {
-    const userorders = await Order.findOne({ orderby: id });
-    const cart = await Cart.findOneAndRemove({ orderby: user.id })
-      .populate("products.product")
-      .exec();
-    res.json(userorders);
+    const order = await Order.findOne({ _id: order_id });
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    order.orderStatus = orderStatus;
+    await order.save();
+    res.json({ message: "Order Status Updated", order: order });
   } catch (error) {
-    throw new Error(error);
+    res.status(500).json({ message: "Error updating order status" });
   }
 });
 
-const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { status } = req.body;
+const uploadProfilePic = asyncHandler(async (req, res) => {
   const { id } = req.user;
   validateMongoDbId(id);
-
   try {
-    const updateOrderStatus = await Order.findByIdAndUpdate(
-      id,
-      {
-        orderStatus: status,
-        paymentIntent: {
-          status: status,
-        },
-      },
-      { new: true }
-    );
-    res.json(updateOrderStatus);
+    // console.log(req.file);
+    const result = await cloudinary.uploader.upload(req.file.path);
+    // console.log(result);
+    const uri = result.secure_url;
+    if (result) {
+      res.json({ status: 200, message: "Profile Updated", data: uri });
+    } else {
+      res.json({ status: 200, message: "Failed to upload", data: null });
+    }
   } catch (error) {
-    throw new Error(error);
+    res.json({ status: 200, message: "internal server error", data: null });
   }
-});*/
+});
+
+// cloudinary.config({
+//   cloud_name: process.env.CLOUD_NAME,
+//   api_key: process.env.API_KEY,
+//   api_secret: process.env.API_SECRET,
+// });
 
 module.exports = {
   createUser,
@@ -611,6 +754,10 @@ module.exports = {
   updateProductQuantityFromCart,
   createOrder,
   getMyOrders,
+  getAllOrders,
+  updateOrder,
+  updateOrderStatus,
+  uploadProfilePic,
 };
 //getallorders
 //getorderbyuserid

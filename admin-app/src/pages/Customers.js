@@ -1,59 +1,68 @@
-import React, { useEffect } from 'react';
-import {Table } from 'antd';
-import { getUsers } from '../features/customers/customerSlice';
-import {  useDispatch,useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Table, Input } from "antd";
+import { getUsers } from "../features/customers/customerSlice";
+import { useDispatch, useSelector } from "react-redux";
 
+const { Search } = Input;
 
 const columns = [
-    {
-      title: "SNo",
-      dataIndex: "key",
-    },
-    {
-      title: "Name",
-      dataIndex: "name",
-      
-      sorter:(a, b) => a.name.length - b.name.length,
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-    },
-    {
-      title: "Mobile",
-      dataIndex: "mobile",
-    },
-  ];
+  {
+    title: "SNo",
+    dataIndex: "key",
+  },
+  {
+    title: "Name",
+    dataIndex: "name",
+    sorter: (a, b) => a.name.length - b.name.length,
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+  },
+  {
+    title: "Address",
+    dataIndex: "address",
+  },
+];
+
 const Customers = () => {
-  const dispatch =useDispatch();
-  useEffect(()=>{dispatch(getUsers())},[]);
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUsers());
-}, [dispatch]);
+  }, []);
 
-  const customerstate=useSelector((state)=>state.customer.customers);
-  const data1 = [];
-  for (let i = 0; i < customerstate.length; i++) {
-    if(customerstate[i].role !=='admin'){
-      data1.push({
-        key: i + 1,
-        name: customerstate[i].firstname + " " + customerstate[i].lastname,
-        email: customerstate[i].email,
-        mobile: customerstate[i].mobile,
-      });
-    }
-    
-  }
+  const customerState = useSelector((state) => state.customer.customers);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  
+  const data = customerState
+    .filter((customer) => customer.role !== "admin")
+    .filter((customer) =>
+      customer.firstname.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .map((customer, index) => ({
+      key: index + 1,
+      name: customer.firstname + " " + customer.lastname,
+      email: customer.email,
+      address: customer.address,
+    }));
+
+  const handleSearch = (value) => {
+    setSearchTerm(value);
+  };
+
   return (
     <div>
-    <h3 className="mb-4 title">Customers </h3>
-    <div>
-      <Table columns={columns} dataSource={data1} />
+      <h3 className="mb-4 title">Customers</h3>
+      <Search
+        placeholder="Search by name"
+        allowClear
+        enterButton
+        onSearch={handleSearch}
+        style={{ width: 200, marginBottom: 16 }}
+      />
+      <Table columns={columns} dataSource={data} />
     </div>
-  </div>
-  )
-}
+  );
+};
 
 export default Customers;

@@ -6,17 +6,23 @@ export const uploadImg = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const formData = new FormData();
+      console.log("daata", data);
       for (let i = 0; i < data.length; i++) {
-        formData.append("images", data[i]);
+        formData.append("file", data[i]);
       }
+
       let response = await uploadService.uploadImg(formData);
-      response = response.map(res => res.url)
+      response = response.map((res) => ({
+        url: res.url,
+        public_id: res.public_id,
+      }));
       console.log(response);
-      return thunkAPI.fulfillWithValue(response)
-      // return response.secure_url; // Return only the URL
+      return thunkAPI.fulfillWithValue(response);
     } catch (error) {
       console.log(error);
-      return thunkAPI.rejectWithValue(error.response ? error.response.data : { message: error.message });
+      return thunkAPI.rejectWithValue(
+        error.response ? error.response.data : { message: error.message }
+      );
     }
   }
 );

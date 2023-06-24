@@ -3,8 +3,9 @@ import ReactStars from "react-rating-stars-component";
 import { Link } from "react-router-dom";
 
 const SpecialProduct = (props) => {
-  const {title, brand, totalrating, price, sold, quantity,id} = props;
-  
+  const { title, brand, totalrating, price, sold, quantity, id } = props;
+  console.log(props);
+
   return (
     <div className="col-6 mb-3">
       <div className="special-product-card">
@@ -24,23 +25,26 @@ const SpecialProduct = (props) => {
               activeColor="#ffd700"
             />{" "}
             <p className="price">
-              <span className="red-p">$ {price} </span> 
+              <span className="red-p">$ {price} </span>
             </p>
-           
             <div className="prod-count my-3">
               <p>Products: {quantity}</p>
-              <div className='progress'>
-                <div className='progress-bar'
-                     role='progressbar'
-                     style={{width: quantity / quantity + sold * 100 + "%"}}
-                     aria-valuenow={quantity / quantity + sold * 100}
-                     aria-valuemin={quantity}
-                     aria-valuemax={sold + quantity}>
-                     
-                </div>
+              <div className="progress">
+                <div
+                  className="progress-bar"
+                  role="progressbar"
+                  style={{ width: quantity / quantity + sold * 100 + "%" }}
+                  aria-valuenow={quantity / quantity + sold * 100}
+                  aria-valuemin={quantity}
+                  aria-valuemax={sold + quantity}
+                ></div>
               </div>
             </div>
-            <div><Link className= "button" to={'/product/'+id}>View</Link></div>
+            <div>
+              <Link className="button" to={"/product/" + id}>
+                View
+              </Link>
+            </div>
           </div>
           <div />
         </div>

@@ -6,6 +6,15 @@ import Dropzone from "react-dropzone";
 import { deleteImg, uploadImg } from "../features/upload/uploadSlice";
 import { toast } from "react-toastify";
 import * as yup from "yup";
+import {
+  TextField,
+  Select,
+  FormControl,
+  Typography,
+  InputLabel,
+  Autocomplete,
+  MenuItem,
+} from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
@@ -17,11 +26,11 @@ import {
 } from "../features/blogs/blogSlice";
 import { getCategories } from "../features/bCategory/bCategorySlice";
 
-/*let schema = yup.object().shape({
+let schema = yup.object().shape({
   title: yup.string().required("Title is Required"),
   description: yup.string().required("Description is Required"),
   category: yup.string().required("Category is Required"),
-});*/
+});
 
 const Addblog = () => {
   const dispatch = useDispatch();
@@ -30,85 +39,92 @@ const Addblog = () => {
   const getBlogId = location.pathname.split("/")[3];
   const imgState = useSelector((state) => state.upload.images);
   const bCatState = useSelector((state) => state.bCategory.bCategories);
-  //const blogState = useSelector((state) => state.blogs);
-  const blogState = {
-    isSuccess: false,
-    isError: false,
-    isLoading: false,
-    createdBlog: {},
-    blogName: '',
-    blogDesc: '',
-    blogCategory: '',
-    blogImages: [],
-    updatedBlog: {},
-  };
-  
-  const { isSuccess, isError, isLoading, createdBlog, updatedBlog,blogName, blogDesc, blogCategory, blogImages } = blogState;
-  
-  const img = []; // Initialize img array here
-  
+  const blogState = useSelector((state) => state.blogs);
+  const {
+    isSuccess,
+    isError,
+    isLoading,
+    createdBlog,
+    updatedBlog,
+    blogName,
+    blogDesc,
+    blogCategory,
+    blogImages,
+  } = blogState;
+  const [img, setImg] = useState([]);
+  useEffect(() => {
+    if (blogImages) {
+      setImg(blogImages); // Set blog images if available
+    }
+  }, [blogImages]);
+
   useEffect(() => {
     if (getBlogId !== undefined) {
       dispatch(getABlog(getBlogId));
-      img.push(blogImages);
     } else {
       dispatch(resetState());
     }
   }, [getBlogId]);
 
   useEffect(() => {
-    dispatch(resetState());
+    // dispatch(resetState());
     dispatch(getCategories());
   }, []);
 
+  const handleDrop = (acceptedFiles) => {
+    dispatch(uploadImg(acceptedFiles));
+  };
   useEffect(() => {
-    if (isSuccess && createdBlog) {
-      toast.success("Blog Added Successfullly!");
-    }
-    if (isSuccess && updatedBlog) {
-      toast.success("Blog Updated Successfullly!");
-      navigate("/admin/blog-list");
-    }
-    if (isError) {
-      toast.error("Something Went Wrong!");
-    }
-  }, [isSuccess, isError, isLoading]);
+    if (imgState) {
+      const existingImages = imgState.map((image) => ({
+        public_id: image.public_id,
+        url: image.url,
+      }));
 
-  imgState.forEach((i) => {
-    img.push({
-      public_id: i.public_id,
-      url: i.url,
-    });
-  });
-  console.log(img);
-  
-  useEffect(() => {
-    formik.values.images = img;
-  }, [blogImages]);
-
+      setImg((prevImages) => [...prevImages, ...existingImages]);
+    }
+  }, [imgState]);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       title: blogName || "",
       description: blogDesc || "",
       category: blogCategory || "",
-      images: "",
+      images: img,
     },
-    //validationSchema: schema,
+    validationSchema: schema,
     onSubmit: (values) => {
       if (getBlogId !== undefined) {
         const data = { id: getBlogId, blogData: values };
         dispatch(updateBlog(data));
+        toast.success("Blog Updated Successfully!");
+        setTimeout(() => {
+          navigate("/admin/blog-list");
+        }, 1000);
         dispatch(resetState());
       } else {
         dispatch(createBlog(values));
         formik.resetForm();
+        toast.success("Blog Added Successfully!");
         setTimeout(() => {
           dispatch(resetState());
-        }, 300);
+          window.location.href = "http://localhost:3001/admin/blog-list";
+        }, 1000);
       }
     },
   });
+
+  console.log("============> blogImages", getBlogId);
+  console.log("============> blogImages", blogImages);
+  console.log("============> img", img);
+  console.log("============>", formik.values);
+  const handleDeleteImage = (publicId) => {
+    dispatch(deleteImg(publicId));
+
+    setImg((prevImages) =>
+      prevImages.filter((image) => image.public_id !== publicId)
+    );
+  };
 
   return (
     <div>
@@ -119,53 +135,74 @@ const Addblog = () => {
       <div className="">
         <form action="" onSubmit={formik.handleSubmit}>
           <div className="mt-4">
-            <CustomInput
+            <Typography variant="h6" component="h6">
+              Enter Blog Title
+            </Typography>
+            <TextField
               type="text"
               label="Enter Blog Title"
               name="title"
+              className="form-control"
               onChange={formik.handleChange("title")}
               onBlur={formik.handleBlur("title")}
               value={formik.values.title}
+              fullWidth
             />
           </div>
           <div className="error">
             {formik.touched.title && formik.errors.title}
           </div>
-          <select
-            name="category"
-            onChng={formik.handleChange("category")}
-            onBlr={formik.handleBlur("category")}
-            val={formik.values.category}
-            className="form-control py-3  mt-3"
-           i_id=""
-          >
-            <option value="">Select Blog Category</option>
-            {bCatState?.map((i, j) => {
-              return (
-                <option key={j} value={i.title}>
-                  {i.title}
-                </option>
-              );
-            })}
-          </select>
-          <div className="error">
-            {formik.touched.category && formik.errors.category}
+          <div className="mt-4">
+            <Typography variant="h6" component="h6">
+              Select Blog category
+            </Typography>
+            <FormControl className="form-control">
+              <InputLabel id="category-label">Select Blog Category</InputLabel>
+              <Select
+                labelId="category-label"
+                id="category"
+                name="category"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.category}
+              >
+                <MenuItem value="">Select Blog Category</MenuItem>
+                {bCatState?.map((i, j) => (
+                  <MenuItem key={j} value={i.title}>
+                    {i.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <div className="error">
+              {formik.touched.category && formik.errors.category}
+            </div>
           </div>
-          <ReactQuill
-            theme="snow"
-            className="mt-3"
-            name="description"
-            onChng={formik.handleChange("description")}
-            onBlr={formik.handleBlur("description")}
-            valu={formik.values.description}
-          />
+          <div className="mt-4">
+            <Typography variant="h6" component="h6">
+              Enter Blog Description
+            </Typography>
+            <FormControl className="form-control">
+              <ReactQuill
+                theme="snow"
+                className="mt-3"
+                name="description"
+                id="description"
+                onChange={formik.handleChange("description")}
+                onBlr={formik.handleBlur("description")}
+                value={formik.values.description}
+              />
+            </FormControl>
+          </div>
           <div className="error">
             {formik.touched.description && formik.errors.description}
           </div>
+
           <div className="bg-white border-1 p-5 text-center mt-3">
-            <Dropzone
-              onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}
-            >
+            <Typography variant="h6" component="h6">
+              Select Pictures for Blog
+            </Typography>
+            <Dropzone onDrop={handleDrop}>
               {({ getRootProps, getInputProps }) => (
                 <section>
                   <div {...getRootProps()}>
@@ -179,12 +216,12 @@ const Addblog = () => {
             </Dropzone>
           </div>
           <div className="showimages d-flex flex-wrap mt-3 gap-3">
-            {imgState?.map((i, j) => {
+            {img?.map((i, j) => {
               return (
                 <div className=" position-relative" key={j}>
                   <button
                     type="button"
-                    onClick={() => dispatch(deleteImg(i.public_id))}
+                    onClick={() => handleDeleteImage(i.public_id)}
                     className="btn-close position-absolute"
                     style={{ top: "10px", right: "10px" }}
                   ></button>

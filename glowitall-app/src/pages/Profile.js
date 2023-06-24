@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateProfile } from "../features/users/userSlice";
 import { FaEdit } from "react-icons/fa";
 import "./Profile.css";
+import axios from "axios";
+import { base_url, config } from "../utils/axiosConfig";
 
 const profileSchema = yup.object({
   firstname: yup.string().required("First Name is Required"),
@@ -18,32 +20,64 @@ const profileSchema = yup.object({
     .required("Email is Required"),
 });
 
-
-
 const Profile = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state?.auth?.user);
   const [edit, setEdit] = useState(true);
-  const [profilePicture, setProfilePicture] = useState(null);
-   const user = JSON.parse(localStorage.getItem("user"));
-   console.log(user)
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+
+  const [profilePicture, setProfilePicture] = useState(user?.profile || null);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       firstname: user?.firstname,
       lastname: user?.lastname,
       email: user?.email,
+      address: user?.address,
     },
     validationSchema: profileSchema,
     onSubmit: (values) => {
-      dispatch(updateProfile(values));
+      const inputs = {
+        ...values,
+        profile: profilePicture,
+      };
+      dispatch(updateProfile(inputs));
+      user.firstname = values.firstname;
+      user.lastname = values.lastname;
+      user.address = values.address;
+      user.profile = profilePicture;
+      localStorage.setItem("user", JSON.stringify(user));
       setEdit(true);
     },
   });
-  const handleProfilePictureChange = (e) => {
+  const handleProfilePictureUpload = async (e) => {
+    const userToken = JSON.parse(localStorage.getItem("userToken"));
+    const config2 = {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    console.log(e.target.files[0]);
     const file = e.target.files[0];
-    setProfilePicture(file);
+    // setProfilePicture(file);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await axios.post(
+        `${base_url}user/upload/profilePic`,
+        formData,
+        config2
+      );
+      console.log(res);
+      setProfilePicture(res.data.data);
+    } catch (error) {
+      console.log("Error uploading profile picture:", error);
+    }
   };
+
   return (
     <>
       <Meta title={"My Profile"} />
@@ -64,11 +98,13 @@ const Profile = () => {
                 </label>
                 {edit ? (
                   <div>
-                    {user?.profilePicture ? (
+                    {profilePicture || user?.profilePicture ? (
                       <div
                         className="profile-pic"
                         style={{
-                          backgroundImage: `url(${user.profilePicture})`,
+                          backgroundImage: `url(${
+                            profilePicture || user.profilePicture
+                          })`,
                         }}
                       ></div>
                     ) : (
@@ -81,7 +117,7 @@ const Profile = () => {
                       type="file"
                       name="profilePicture"
                       accept="image/*"
-                      onChange={handleProfilePictureChange}
+                      onChange={(e) => handleProfilePictureUpload(e)}
                       id="profile-picture-upload"
                       style={{ display: "none" }}
                     />
@@ -89,11 +125,13 @@ const Profile = () => {
                       htmlFor="profile-picture-upload"
                       className="profile-pic-upload"
                     >
-                      {user?.profilePicture ? (
+                      {profilePicture || user?.profilePicture ? (
                         <div
                           className="profile-pic"
                           style={{
-                            backgroundImage: `url(${user.profilePicture})`,
+                            backgroundImage: `url(${
+                              profilePicture || user.profilePicture
+                            })`,
                           }}
                         ></div>
                       ) : (
@@ -160,6 +198,26 @@ const Profile = () => {
                 />
                 <div className="error">
                   {formik.touched.email && formik.errors.email}
+                </div>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="exampleInputEmail2" className="form-label">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  name="address"
+                  disabled={edit}
+                  className="form-control"
+                  id="address"
+                  aria-describedby="address"
+                  value={formik.values.address} // Join the address array with a comma and space
+                  onChange={formik.handleChange("address")}
+                  onBlur={formik.handleBlur("address")}
+                />
+
+                <div className="error">
+                  {formik.touched.address && formik.errors.address}
                 </div>
               </div>
               {edit === false && (

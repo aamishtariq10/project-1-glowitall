@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import pCategoryService from "./pCategoryService";
-import { createAction } from 'redux-actions';
-
+import { createAction } from "redux-actions";
 
 export const getCategories = createAsyncThunk(
   "productCategory/get-categories",
@@ -36,7 +35,7 @@ export const updateAProductCategory = createAsyncThunk(
 );
 export const deleteAProductCategory = createAsyncThunk(
   "productCategory/delete-category",
-  async (id,thunkAPI) => {
+  async (id, thunkAPI) => {
     try {
       return await pCategoryService.deleteProductCategory(id);
     } catch (error) {
@@ -44,9 +43,9 @@ export const deleteAProductCategory = createAsyncThunk(
     }
   }
 );
-export const getAProductCategory= createAsyncThunk(
+export const getAProductCategory = createAsyncThunk(
   "productCategory/get-Product-Category",
-  async (id,thunkAPI) => {
+  async (id, thunkAPI) => {
     try {
       return await pCategoryService.getProductCategory(id);
     } catch (error) {
@@ -55,7 +54,7 @@ export const getAProductCategory= createAsyncThunk(
   }
 );
 
-export const resetState=createAction("Reset_All");
+export const resetState = createAction("Reset_All");
 
 const initialState = {
   pCategories: [],
@@ -83,7 +82,7 @@ export const pCategorySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.message= action.error;
+        state.message = action.error;
       })
       .addCase(createCategory.pending, (state) => {
         state.isLoading = true;
@@ -98,7 +97,7 @@ export const pCategorySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.message= action.error;
+        state.message = action.error;
       })
       .addCase(updateAProductCategory.pending, (state) => {
         state.isLoading = true;
@@ -113,9 +112,9 @@ export const pCategorySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.message= action.error;
+        state.message = action.error;
       })
-      
+
       .addCase(deleteAProductCategory.pending, (state) => {
         state.isLoading = true;
       })
@@ -129,7 +128,7 @@ export const pCategorySlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.message= action.error;
+        state.message = action.error;
       })
       .addCase(getAProductCategory.pending, (state) => {
         state.isLoading = true;
@@ -139,17 +138,16 @@ export const pCategorySlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.categoryName = action.payload.title;
+        console.log(action.payload);
       })
       .addCase(getAProductCategory.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.message= action.error;
+        state.message = action.error;
       })
-      
-      
-      
-.addCase(resetState,()=>initialState);
+
+      .addCase(resetState, () => initialState);
   },
 });
 export default pCategorySlice.reducer;

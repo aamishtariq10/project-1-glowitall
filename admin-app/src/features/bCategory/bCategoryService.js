@@ -3,52 +3,32 @@ import { base_url } from "../../utils/base_url";
 import { config } from "../../utils/axiosconfig";
 
 const createBlogCategory = async (bcat) => {
-  const header = localStorage.getItem("userToken");
-  const response = await axios.post(`${base_url}blogcategory/`, bcat, {
-    headers: {
-
-        "userToken": `${header}`
-    }
-      });
-
+  const response = await axios.post(`${base_url}blogcategory/`, bcat, config);
   return response.data;
 };
 
 const getBlogCategories = async () => {
   const response = await axios.get(`${base_url}blogcategory/`);
-
   return response.data;
 };
 
 const getBlogCategory = async (id) => {
   const response = await axios.get(`${base_url}blogcategory/${id}`);
-
   return response.data;
 };
 
-const updateCategory = async (blogCat) => {
-  const header = localStorage.getItem("userToken");
+const updateBlogCat = async (blogCat) => {
+  console.log(blogCat);
   const response = await axios.put(
-    `${base_url}blogcategory/${blogCat.Id}`,
+    `${base_url}blogcategory/${blogCat.id}`,
     { title: blogCat.blogCatData.title },
-    {
-      headers: {
-  
-          "userToken": `${header}`
-      }
-        }
+    config
   );
   return response.data;
 };
 
 const deleteCategory = async (id) => {
-  const header = localStorage.getItem("userToken");
-  const response = await axios.delete(`${base_url}blogcategory/${id}`, {
-    headers: {
-
-        "userToken": `${header}`
-    }
-      });
+  const response = await axios.delete(`${base_url}blogcategory/${id}`, config);
 
   return response.data;
 };
@@ -57,7 +37,7 @@ const bCategoryService = {
   getBlogCategories,
   createBlogCategory,
   getBlogCategory,
-  updateCategory,
+  updateBlogCat,
   deleteCategory,
 };
 

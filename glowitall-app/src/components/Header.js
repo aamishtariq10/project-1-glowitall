@@ -18,7 +18,9 @@ const Header = () => {
   const authState = useSelector((state) => state?.auth);
   const productState = useSelector((state) => state?.product?.product);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
-  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).firstname : null
+  const user = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null;
   // const [profilePicture, setProfilePicture] = useState(userState?.profilePicture);
   const [paginate, setPaginate] = useState(true);
   const [total, setTotal] = useState(null);
@@ -111,7 +113,7 @@ const Header = () => {
                 </Link>
 
                 <Link
-                  to={authState?.user === null ? "/login" :""}
+                  to={authState?.user === null ? "/login" : ""}
                   className="d-flex align-items-center gap-10 text-dark"
                   style={{ textDecoration: "none" }}
                 >
@@ -119,7 +121,7 @@ const Header = () => {
                   {authState?.user === null ? (
                     <p className="mb-0">Login </p>
                   ) : (
-                    <p className="mb-0">Welcome {user}</p>
+                    <p className="mb-0">Welcome {user?.firstname}</p>
                   )}
                 </Link>
                 <div className="dropdown">
@@ -130,7 +132,19 @@ const Header = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <RiAccountCircleLine className="fs-2" />
+                    <img
+                      src={
+                        user
+                          ? user?.profile
+                          : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                      }
+                      alt=""
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                      }}
+                    />
                   </button>
 
                   <ul
@@ -142,11 +156,18 @@ const Header = () => {
                         My Profile
                       </NavLink>
                     </li>
-                    <li>
-                      <NavLink className="dropdown-item" onClick={handleLogout}>
-                        Logout
-                      </NavLink>
-                    </li>
+                    {authState?.user ? (
+                      <li>
+                        <NavLink
+                          className="dropdown-item"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </NavLink>
+                      </li>
+                    ) : (
+                      <p className="mb-0"></p>
+                    )}
                   </ul>
                 </div>
               </div>
@@ -345,7 +366,7 @@ const Header = () => {
                         {/* Add more sub-links as needed */}
                       </ul>
                     </li>
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                       <NavLink
                         className="nav-link text-white"
                         activeClassName="active"
@@ -354,8 +375,8 @@ const Header = () => {
                       >
                         BODY
                       </NavLink>
-                    </li>
-                    <li className="nav-item">
+                    </li> */}
+                    {/* <li className="nav-item">
                       <NavLink
                         className="nav-link text-white"
                         activeClassName="active"
@@ -364,7 +385,7 @@ const Header = () => {
                       >
                         BUNDLES
                       </NavLink>
-                    </li>
+                    </li> */}
                     <li className="nav-item">
                       <NavLink
                         className="nav-link  text-white"

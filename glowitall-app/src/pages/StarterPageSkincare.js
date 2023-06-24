@@ -22,7 +22,7 @@ const StarterPageSkincare = () => {
                <h6 className='Start-content py-2 text-dark'>Let's find just what your skin <br/> needs to look and feel its best. </h6>
                <h6 className='Start-content py-2 text-dark'> Reveal your personalized Skincare <br/> products under 2 minutes!</h6>
                <div className='button-holder py-2'>
-               <Link to="/Skin-Q1">
+               <Link to="/skincarequiz">
                <button className='rec-button' >
                 <span >GET STARTED</span>
                </button>

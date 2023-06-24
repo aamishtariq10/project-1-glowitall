@@ -35,7 +35,7 @@ const Login = () => {
       try {
         const res = await dispatch(loginUser(values));
         if (res.payload.status == 200) {
-          navigate("/");
+          window.location.href = "http://localhost:3000/";
         }
       } catch (error) {
         console.log("Internal Server Error");

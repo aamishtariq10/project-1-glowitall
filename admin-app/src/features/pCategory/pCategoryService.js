@@ -12,8 +12,8 @@ const createCategory = async (category) => {
   return response.data;
 };
 
-const getProductCategory = async () => {
-  const response = await axios.get(`${base_url}category/`);
+const getProductCategory = async (id) => {
+  const response = await axios.get(`${base_url}category/${id}`);
   return response.data;
 };
 
@@ -23,16 +23,10 @@ const deleteProductCategory = async (id) => {
 };
 
 const updateProductCategory = async (category) => {
-  const header = localStorage.getItem("userToken");
-  console.log(category);
   const response = await axios.put(
     base_url + "category/" + category.id,
     { title: category.pCatData.title },
-    {
-      headers: {
-          "userToken": header
-      }
-  }
+    config
   );
   return response.data;
 };

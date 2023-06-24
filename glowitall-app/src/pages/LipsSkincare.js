@@ -1,21 +1,97 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import ReactStars from "react-rating-stars-component";
 import Container from "../components/Container";
 import { TfiLayoutColumn4 } from "react-icons/tfi";
 import { TfiLayoutColumn3 } from "react-icons/tfi";
 import { TfiLayoutColumn2 } from "react-icons/tfi";
-import LipsSkincareCard from "../components/LipsSkincareCard";
-import { Link } from "react-router-dom";
+import FaceMakeupCard from "../components/FaceMakeupCard";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../features/products/productSlice";
 
 const LipsSkincare = () => {
+  const pro = useSelector((state) => state?.product?.product);
+  const productState = pro.products;
+  console.log(productState, "================");
+  console.log(productState);
   const [grid, setGrid] = useState(3);
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [category, setCategory] = useState(null);
+  const [tag, setTag] = useState(null);
+  const [brand, setBrand] = useState(null);
+  const [sort, setSort] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(12);
+  const totalProducts = pro.totalProducts;
+  const totalPages = Math.ceil(totalProducts / productsPerPage);
+  console.log(totalPages);
+  useEffect(() => {
+    let newBrands = [];
+    let category = [];
+    let newtags = [];
+    if (productState) {
+      for (let index = 0; index < productState.length; index++) {
+        const element = productState[index];
+        newBrands.push(element.brand);
+        category.push(element.category);
+        newtags.push(element.tags);
+      }
+    }
+    setBrands(newBrands);
+    setCategories(category);
+    setTags(newtags);
+  }, [productState]);
+  useEffect(() => {
+    getProducts();
+  }, [sort, tag, brand, category, currentPage]);
+
+  const dispatch = useDispatch();
+  const clearCategory = () => {
+    setCategory(null);
+  };
+
+  const clearTag = () => {
+    setTag(null);
+  };
+
+  const clearBrand = () => {
+    setBrand(null);
+  };
+  const getProducts = async () => {
+    try {
+      await dispatch(
+        getAllProducts({
+          sort,
+          tag,
+          brand,
+          category: "lips skincare",
+          page: currentPage,
+          perPage: productsPerPage,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  console.log(currentPage);
+  console.log(productsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  console.log(
+    [...new Set(brands)],
+    [...new Set(categories)],
+    [...new Set(tag)]
+  );
+  console.log(sort);
 
   return (
     <>
-      <Meta title={"Lips"} />
-      <BreadCrumb title="Lips Skincare" />
+      <Meta title={"Shop All"} />
+      <BreadCrumb title="Shop All" />
 
       <Container class1="store-wrapper home-wrapper-2 py-1">
         <div className="row">
@@ -24,149 +100,88 @@ const LipsSkincare = () => {
               <img
                 src="https://img.freepik.com/free-photo/close-up-portrait-young-beatufiul-woman-looking-mirror-fixing-her-makeup-put-lipstick-s_1258-123042.jpg?w=826&t=st=1680209377~exp=1680209977~hmac=5bf87539666c0273790900e58b349c8497beb9a1073879250c5d22fa96c899da"
                 alt="Lips"
-                style={{ width: "100%" }}
+                style={{ width: "100%", height: "400px" }}
               />
             </div>
           </div>
-          <div className="col-3">
+          <div className="col-12 col-md-3 d-flex flex-column">
             <div className="filter-card mb-3">
-              <h3 className="filter-title">Shop By Categories</h3>
-              <div>
-                <ul className="ps-0">
-                  <li>
-                    {" "}
-                    <Link
-                      to="/Shop-All"
-                      style={{
-                        textDecoration: "none",
-                        color: "var(--color-777777)",
-                      }}
-                    >
-                      Shop by All
-                    </Link>
-                  </li>
-                  <li>
-                    {" "}
-                    <Link
-                      to="/eyes-skincare"
-                      style={{
-                        textDecoration: "none",
-                        color: "var(--color-777777)",
-                      }}
-                    >
-                      Eyes
-                    </Link>
-                  </li>
-                  <li>
-                    {" "}
-                    <Link
-                      to="/face-skincare"
-                      style={{
-                        textDecoration: "none",
-                        color: "var(--color-777777)",
-                      }}
-                    >
-                      Face
-                    </Link>
-                  </li>
-                  <li>
-                    {" "}
-                    <Link
-                      to="/lips-skincare"
-                      style={{
-                        textDecoration: "none",
-                        color: "var(--color-777777)",
-                      }}
-                    >
-                      Lips
-                    </Link>
-                  </li>
-                  <li>
-                    {" "}
-                    <Link
-                      to="/body"
-                      style={{
-                        textDecoration: "none",
-                        color: "var(--color-777777)",
-                      }}
-                    >
-                      Body
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="filter-card mb-3">
-              <h3 className="filter-title">Product Tags</h3>
-              <div>
+              <h3 className="filter-title">
+                Shop By Categories
+                {category && (
+                  <div className="reset-filter">
+                    <span onClick={clearCategory}>X</span>
+                  </div>
+                )}
+              </h3>
+              <div className="filter-content">
                 <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Eye Liner
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Eye Lashes
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Lip Liner
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Lip Gloss
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Cream
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Scrub
-                  </span>
+                  {categories &&
+                    [...new Set(categories)].map((item, index) => {
+                      return (
+                        <span
+                          onClick={() => setCategory(item)}
+                          key={index}
+                          className="text-capitalize badge bg-light text-secondary rounded-3 py-2 px-3"
+                        >
+                          {item}
+                        </span>
+                      );
+                    })}
                 </div>
               </div>
             </div>
 
             <div className="filter-card mb-3">
-              <h3 className="filter-title"> Random Products </h3>
-
-              <div>
-                <div className="random-products mb-3 d-flex gap-10">
-                  <div className="w-50">
-                    <img
-                      src="https://media.istockphoto.com/id/1283388866/photo/part-of-womans-face-womans-lips-nose-and-hand-soft-skin.jpg?b=1&s=170667a&w=0&k=20&c=CUWTPFaRYupf3KMN6WSpROGJGHYOKGq3Mm675ugWbY8="
-                      className="img-fluid"
-                      alt="Lipstick"
-                    />
-                  </div>
-                  <div className="w-50">
-                    <h5>Lorem Ipsum is simply dummy text. </h5>
-                    <ReactStars
-                      count={5}
-                      value="3"
-                      edit={false}
-                      size={15}
-                      activeColor="#ffd700"
-                    />
-                    <p>$200</p>
-                  </div>
+              <h3 className="filter-title">
+                Product Tags
+                {tag && (
+                  <span className="reset-filter" onClick={clearTag}>
+                    X
+                  </span>
+                )}
+              </h3>
+              <div className="filter-content">
+                <div className="product-tags d-flex flex-wrap align-items-center gap-10">
+                  {tags &&
+                    [...new Set(tags)].map((item, index) => {
+                      return (
+                        <span
+                          onClick={() => setTag(item)}
+                          key={index}
+                          className="text-capitalize badge bg-light text-secondary rounded-3 py-2 px-3"
+                        >
+                          {item}
+                        </span>
+                      );
+                    })}
                 </div>
+              </div>
+            </div>
 
-                <div className="random-products d-flex gap-10">
-                  <div className="w-50">
-                    <img
-                      src="https://media.istockphoto.com/id/1283388866/photo/part-of-womans-face-womans-lips-nose-and-hand-soft-skin.jpg?b=1&s=170667a&w=0&k=20&c=CUWTPFaRYupf3KMN6WSpROGJGHYOKGq3Mm675ugWbY8="
-                      className="img-fluid"
-                      alt="Lipstick"
-                    />
-                  </div>
-                  <div className="w-50">
-                    <h5>Lorem Ipsum is simply dummy text. </h5>
-                    <ReactStars
-                      count={5}
-                      value="3"
-                      edit={false}
-                      size={15}
-                      activeColor="#ffd700"
-                    />
-                    <p>$200</p>
-                  </div>
+            <div className="filter-card mb-3">
+              <h3 className="filter-title">
+                Product Brands
+                {brand && (
+                  <span className="reset-filter" onClick={clearBrand}>
+                    X
+                  </span>
+                )}
+              </h3>
+              <div className="filter-content">
+                <div className="product-brands d-flex flex-wrap align-items-center gap-10">
+                  {brands &&
+                    [...new Set(brands)].map((item, index) => {
+                      return (
+                        <span
+                          onClick={() => setBrand(item)}
+                          key={index}
+                          className="text-capitalize badge bg-light text-secondary rounded-3 py-2 px-3"
+                        >
+                          {item}
+                        </span>
+                      );
+                    })}
                 </div>
               </div>
             </div>
@@ -181,24 +196,23 @@ const LipsSkincare = () => {
                   <select
                     name=""
                     defaultValue={"manual"}
-                    className="form-control form-select "
+                    className="form-control form-select"
                     id=""
+                    onChange={(e) => setSort(e.target.value)}
                   >
-                    <option value="manual">Featured</option>
-                    <option value="best-selling">Best selling </option>
-                    <option value="title-ascending">Alphabetically, A-Z</option>
-                    <option value="title-descending">
-                      {" "}
-                      Alphabetically, Z-A{" "}
-                    </option>
-                    <option value="price-ascending">Price, low to high</option>
-                    <option value="price-descending">Price, high to low</option>
-                    <option value="created-ascending">Date, old to new</option>
-                    <option value="created-descending">Date, new to old</option>
+                    <option value="manual">Manual</option>
+                    <option value="brand">Alphabetically, A-Z</option>
+                    <option value="-brand">Alphabetically, Z-A</option>
+                    <option value="price">Price, low to high</option>
+                    <option value="-price">Price, high to low</option>
+                    <option value="createdAt">Date, old to new</option>
+                    <option value="-createdAt">Date, new to old</option>
                   </select>
                 </div>
                 <div className="d-flex align-items-center gap-10">
-                  <p className="totalproducts mb-0">21 Products</p>
+                  <p className="totalproducts mb-0">
+                    {pro?.totalProducts} Products
+                  </p>
                   <div className="d-flex gap-10 align-items-center grid">
                     <button className="border-0 bg-transparent">
                       <TfiLayoutColumn4
@@ -228,7 +242,41 @@ const LipsSkincare = () => {
 
             <div className="products-list pb-5">
               <div className="d-flex flex-wrap gap-10">
-                <LipsSkincareCard grid={grid} />
+                <FaceMakeupCard
+                  data={productState ? productState : []}
+                  u
+                  grid={grid}
+                />
+              </div>
+              <div
+                className="pagination"
+                style={{
+                  marginTop: "20px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    onClick={() => handlePageChange(pageNumber)}
+                    style={{
+                      padding: "5px 10px",
+                      margin: "0 2px",
+                      borderRadius: "3px",
+                      border: "1px solid #ccc",
+                      backgroundColor:
+                        pageNumber === currentPage ? "#e0e0e0" : "#fff",
+                      color: "#000",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
               </div>
             </div>
           </div>

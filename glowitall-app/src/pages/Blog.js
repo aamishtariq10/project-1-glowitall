@@ -18,7 +18,8 @@ const Blog = () => {
 
   const getblogs = () =>{
     dispatch(getAllBlogs());
-  };
+  }; 
+  // console.log("bloggggggggg",blogState )
 
   return (
     <>

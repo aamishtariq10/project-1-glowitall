@@ -1,11 +1,17 @@
 import axios from "axios";
-import { config } from "../../utils/axiosconfig";
 import { base_url } from "../../utils/base_url";
+import { config } from "../../utils/axiosconfig";
 
 const uploadImg = async (data) => {
-  console.log(data.get("images"));
+  const userToken = JSON.parse(localStorage.getItem("userToken"));
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+      "Content-Type": "multipart/form-data",
+    },
+  };
   const response = await axios.post(`${base_url}upload/`, data, config);
-  console.log(response);
+  console.log("upload service response", response);
   return response.data;
 };
 
