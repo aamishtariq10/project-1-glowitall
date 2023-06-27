@@ -35,12 +35,9 @@ let schema = yup.object().shape({
   brand: yup.string().required("Brand is Required"),
   category: yup.string().required("Category is Required"),
   tags: yup.string().required("Tag is Required"),
-  reccomendations: yup.array(),
+  recommendations: yup.array(),
   productType: yup.string(),
-  color: yup
-    .array()
-    .min(1, "Pick at least one color")
-    .required("Color is Required"),
+  color: yup.array(),
   quantity: yup.number().min(1),
 });
 
@@ -76,8 +73,7 @@ const Addproduct = () => {
   useEffect(() => {
     if (isSuccess && createdProduct) {
       toast.success("Product Added Successfullly!");
-    }
-    if (isError) {
+    } else if (isError) {
       toast.error("Something Went Wrong!");
     }
   }, [isSuccess, isError, isLoading]);
@@ -130,13 +126,17 @@ const Addproduct = () => {
       brand: product?.brand || "",
       category: product?.category || "",
       tags: product?.tags || "",
-      color: color || "",
+      color: color || [],
       productType: product?.productType || "",
       quantity: product?.quantity || "",
       images: image || [],
     },
     validationSchema: schema,
     onSubmit: async (values) => {
+      if (!values.category.includes("skincare") && values.color.length <= 0) {
+        toast.error("Please select the Color");
+        return;
+      }
       if (product) {
         const res = await axios.put(
           `${base_url}product/${product._id}`,
@@ -153,13 +153,15 @@ const Addproduct = () => {
         }
       } else {
         dispatch(createProducts(values));
-        if (isSuccess)
+        if (isSuccess) {
           setTimeout(() => {
+            formik.resetForm();
+            setImage([]);
+            setSelectedOptions([]);
+            setColor([]);
             window.location.href = "http://localhost:3001/admin/list-product";
           }, 1000);
-        formik.resetForm();
-        setImage([]);
-        setSelectedOptions([]);
+        }
       }
     },
   });
@@ -167,6 +169,9 @@ const Addproduct = () => {
   const handledesc = (e) => {
     setDesc(e);
   };
+  useEffect(() => {
+    formik.values.recommendations = selectedOptions;
+  }, [selectedOptions]);
   useEffect(() => {
     if (formik.values.category.includes("face makeup")) {
       setShowProductType(true);
@@ -444,11 +449,11 @@ const Addproduct = () => {
                   </li>
                 )}
               />
+              <div className="error">
+                {formik.touched.color && formik.errors.color}
+              </div>
             </>
           )}
-          <div className="error">
-            {formik.touched.color && formik.errors.color}
-          </div>
 
           <Typography variant="h6" component="h6">
             Enter product Quantity

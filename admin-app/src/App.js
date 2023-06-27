@@ -21,6 +21,7 @@ import Addcat from "./pages/Addcat";
 import Addbrand from "./pages/Addbrand";
 import Addproduct from "./pages/Addproduct";
 import ViewOrder from "./pages/ViewOrder";
+import Profile from "./pages/Profile";
 //const cookieParser = require("cookie-parser");
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           <Route path="category/:id" element={<Addcat />} />
           <Route path="list-brand" element={<Brandlist />} />
           <Route path="brand" element={<Addbrand />} />
+          <Route path="profile" element={<Profile />} />
 
           <Route path="brand/:id" element={<Addbrand />} />
           <Route path="list-product" element={<Productlist />} />

@@ -24,26 +24,20 @@ const Cart = () => {
     dispatch(getUserCart()).then((action) => {
       if (action) {
         const cartProduct = action?.payload;
-        setCartProducts(cartProduct);
+
+        if (cartProduct) {
+          toast.info(action?.payload?.message);
+          setCartProducts(cartProduct);
+        }
       } else {
-        console.log("no products");
+        toast.info("An Error has occured try again");
       }
-      console.log("Received cart products:", cartProducts);
     });
   };
 
   useEffect(() => {
     fetchUserCart();
   }, []);
-
-  // useEffect(() => {
-  //   if (userCartState) {
-  //     setCartProducts(userCartState);
-  //   }
-  // }, [userCartState]);
-
-  console.log("Current cart products:", cartProducts);
-
   useEffect(() => {
     if (productUpdateDetail !== null) {
       dispatch(
@@ -52,6 +46,7 @@ const Cart = () => {
           quantity: productUpdateDetail?.quantity,
         })
       );
+
       setTimeout(() => {
         dispatch(getUserCart());
       }, 200);
@@ -71,7 +66,7 @@ const Cart = () => {
         sum + Number(cartProducts[index].quantity) * cartProducts[index].price;
     }
     setTotalAmount(sum);
-  }, [cartProducts]);
+  }, [cartProducts, productUpdateDetail]);
   const handleCheckout = () => {
     if (cartProducts.length === 0) {
       toast.error("No products in the cart", {
@@ -96,9 +91,12 @@ const Cart = () => {
               <h4 className="cart-col-4">Total</h4>
             </div>
 
-            {cartProducts?.map((item, index) => {
-              return (
-                <div className="cart-data py-3 mb-2 d-flex justify-content-between align-items-center">
+            {cartProducts && cartProducts.length > 0 ? (
+              cartProducts.map((item, index) => (
+                <div
+                  className="cart-data py-3 mb-2 d-flex justify-content-between align-items-center"
+                  key={item._id}
+                >
                   <div className="cart-col-1 gap-15 d-flex align-items-center">
                     <div className="w-50">
                       <img
@@ -133,15 +131,36 @@ const Cart = () => {
                         max={10}
                         id=""
                         value={
-                          productUpdateDetail?.quantity
-                            ? productUpdateDetail?.quantity
-                            : item?.quantity
+                          // productUpdateDetail?.quantity
+                          //   ? productUpdateDetail?.quantity
+                          //   : 
+                            item?.quantity
                         }
                         onChange={(e) => {
+                          const newQuantity = e.target.value;
                           setProductUpdateDetail({
                             cartItemId: item?._id,
                             quantity: e.target.value,
                           });
+                          const updatedPrice = item?.price * newQuantity;
+                          const updatedCartProducts = cartProducts.map(
+                            (cartItem) => {
+                              if (cartItem._id === item._id) {
+                                return {
+                                  ...cartItem,
+                                  quantity: newQuantity,
+                                };
+                              }
+                              return cartItem;
+                            }
+                          );
+                          setCartProducts(updatedCartProducts);
+                          setTotalAmount(
+                            (prevAmount) =>
+                              prevAmount -
+                              item?.price * item?.quantity +
+                              updatedPrice
+                          );
                         }}
                       />
                     </div>
@@ -158,8 +177,10 @@ const Cart = () => {
                     <h5 className="price">$ {item?.price * item?.quantity}</h5>
                   </div>
                 </div>
-              );
-            })}
+              ))
+            ) : (
+              <p>No items in the cart</p>
+            )}
 
             <div>
               <div className="col-12 py-2 mt-4">

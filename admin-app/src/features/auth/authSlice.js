@@ -44,6 +44,16 @@ export const getOrderByUser = createAsyncThunk(
     }
   }
 );
+export const updateProfile = createAsyncThunk(
+  "user/profile/update",
+  async (data, thunkAPI) => {
+    try {
+      return await authService.updateUser(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 //login
 export const authSlice = createSlice({
   name: "auth",
@@ -71,6 +81,7 @@ export const authSlice = createSlice({
               email: userdetails.email,
               role: userdetails.role,
               address: userdetails.address,
+              profile : userdetails.profile
             };
             localStorage.setItem("user", JSON.stringify(user));
             toast.info(action.payload.message);
@@ -117,6 +128,29 @@ export const authSlice = createSlice({
         state.isSuccess = false;
         state.message = action.error;
         state.isLoading = false;
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.updatedUser = action.payload;
+
+        if (state.isSuccess) {
+          toast.success("Profile updated Successfully!");
+        }
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+
+        if (state.isSuccess === false) {
+          toast.error("Something Went Wrong!");
+        }
       });
   },
 });

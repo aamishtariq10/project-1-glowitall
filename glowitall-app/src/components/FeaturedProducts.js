@@ -26,7 +26,9 @@ const FeaturedProducts = ({ grid, data }) => {
   const handleMouseLeave = () => {
     setHoveredCard(null);
   };
-
+  const handleProductClick = (productId) => {
+    window.location.href = `/product/${productId}`;
+  };
   return (
     <div className="product-container">
       {Array.isArray(data) &&
@@ -83,7 +85,7 @@ const FeaturedProducts = ({ grid, data }) => {
                       <BiGitCompare className="fs-4" />
                     </button>
                     <Link
-                      to={"/product/" + item._id}
+                      onClick={() => handleProductClick(item._id)}
                       className="border-0 bg-transparent"
                     >
                       <AiOutlineZoomIn className="fs-4" />

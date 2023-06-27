@@ -97,7 +97,27 @@ const Checkout = () => {
         price: cartState[index]?.price,
       });
   }, [cartState]);
+
   console.log(cartState);
+
+  const handleCashDelivery = async (event) => {
+    event.preventDefault(); // Prevent form submission
+    alert("Are you sure you want to place the order?");
+    const res = await dispatch(
+      createAnOrder({
+        totalPrice: totalAmount + 5,
+        totalPriceAfterDiscount: totalAmount + 5,
+        orderItems: cartProductState,
+        paymentInfo: "xyz",
+        shippingInfo: shippingInfo,
+        paymentStatus: "cash on delivery",
+      })
+    );
+    console.log(res.payload.success);
+    // Redirect to payment success page or any other desired action
+    navigate("/payment-success");
+  };
+
   const checkOutHandler = async () => {
     const result = await axios.post(
       "http://localhost:5000/api/user/order/checkout",
@@ -123,9 +143,9 @@ const Checkout = () => {
         })
       );
       console.log(res.payload.success);
-      if (res.payload.success == true) {
-        window.location.assign(result.data.url);
-      }
+      // if (res.payload.success == true) {
+      //   // window.location.assign(result.data.url);
+      // }
     }
   };
   return (
@@ -317,7 +337,10 @@ const Checkout = () => {
                         Continue To Shipping
                       </Link>
                       <button className="button" type="submit">
-                        Place Order
+                        Pay online
+                      </button>
+                      <button className="button" onClick={handleCashDelivery}>
+                        Cash On delivery
                       </button>
                     </div>
                   </div>

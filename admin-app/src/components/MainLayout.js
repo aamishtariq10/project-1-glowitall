@@ -167,16 +167,31 @@ const MainLayout = () => {
             </div>
 
             <div className="d-flex gap-3 align-items-center dropdown">
+              <p className="mb-0">{user?.firstname}</p>
               <div
                 role="button"
                 id="dropdownMenuLink"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <p className="mb-0">{user?.firstname}</p>
+                <img
+                  src={user?.profile}
+                  alt="Profile Picture"
+                  className="rounded-circle"
+                  style={{ width: "40px", height: "40px" }}
+                />
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li></li>
+                <li>
+                  <Link
+                    className="dropdown-item py-1 mb-1"
+                    style={{ height: "auto", lineHeight: "20px" }}
+                    to="/admin/profile"
+                    // onClick={handleProfile}
+                  >
+                    Profile
+                  </Link>
+                </li>
                 <li>
                   <Link
                     className="dropdown-item py-1 mb-1"

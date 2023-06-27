@@ -1,14 +1,10 @@
 import React, { useState } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import MakeupCard from "../components/FaceMakeupCard";
-import SkincareCard from "../components/FaceSkincareCard";
 import ReactStars from "react-rating-stars-component";
 import ReactImageZoom from "react-image-zoom";
 import Color from "../components/Color";
 import Container from "../components/Container";
-import { TbGitCompare } from "react-icons/tb";
-import { AiOutlineHeart } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -31,11 +27,33 @@ const SingleProduct = () => {
   const productState = useSelector((state) => state.product.singleproduct);
   const cartState = useSelector((state) => state.auth.cartProducts);
   const [resData, setFeatured] = useState([]);
-  console.log(productState);
+
+  const [star, setStar] = useState(null);
+  const [comment, setComment] = useState(null);
+  const [ratings, setRatings] = useState(0);
+
   useEffect(() => {
-    dispatch(getAProduct(getProductId));
+    const totalStars = productState?.ratings?.reduce(
+      (sum, rating) => sum + rating.star,
+      0
+    );
+    const averageRating =
+      totalStars && productState?.ratings?.length
+        ? totalStars / productState?.ratings?.length
+        : 0;
+
+    setRatings(averageRating);
+  }, [productState]);
+
+  const getSingle = async () => {
+    const res = await dispatch(getAProduct(getProductId));
+    console.log(res);
+  };
+  useEffect(() => {
+    // dispatch(getAProduct(getProductId));
+    getSingle();
     dispatch(getUserCart());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (cartState) {
@@ -61,15 +79,13 @@ const SingleProduct = () => {
     };
 
     const res = dispatch(addProductToCart(data));
-    console.log("product add to cart response", res);
   };
-  console.log("productState", productState);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${base_url}product/get/featured`);
-        console.log("==========> features", response);
+
         if (response.data?.status === 200) {
           setFeatured(response.data.data);
         } else {
@@ -82,28 +98,23 @@ const SingleProduct = () => {
     fetchData();
   }, []);
 
-  const props = {
-    width: 400,
-    height: 400,
-    zoomWidth: 400,
-    img: productState?.images[0]?.url
-      ? productState?.images[0]?.url
-      : "https://www.shutterstock.com/image-photo/lipstick-fashion-colorful-lipsticks-over-260nw-1017284011.jpg",
-  };
-  const [orderedProduct, setOrderedProduct] = useState(true);
-  const copyToClipboard = (text) => {
-    console.log("text", text);
-    var textField = document.createElement("textarea");
-    textField.innerText = text;
-    document.body.appendChild(textField);
-    textField.select();
-    document.execCommand("copy");
-    textField.remove();
+  const calculateAverageRating = (productState) => {
+    console.log("ratings product state", productState);
+    const totalStars = productState?.reduce(
+      (sum, rating) => sum + rating.star,
+      0
+    );
+    const averageRating =
+      totalStars && productState?.length
+        ? Math.round(totalStars / productState?.length)
+        : 0;
+
+    console.log(totalStars);
+    console.log(averageRating);
+    return averageRating;
   };
 
-  const [star, setStar] = useState(null);
-  const [comment, setComment] = useState(null);
-
+  // console.log(calculateAverageRating(productState.ratingsu))
   const addRatingToProduct = () => {
     if (star === null) {
       toast.error("Please Add Star Rating");
@@ -115,13 +126,31 @@ const SingleProduct = () => {
       dispatch(
         addRating({ star: star, comment: comment, prodId: getProductId })
       );
-      setTimeout(() => {
-        dispatch(getAProduct(getProductId));
-      }, 100);
+
+      dispatch(getAProduct(getProductId));
+
+      window.location.href = `http://localhost:3000/product/${getProductId}`;
     }
+
     return false;
   };
-
+  const props = {
+    width: 400,
+    height: 400,
+    zoomWidth: 400,
+    img: productState?.images[0]?.url
+      ? productState?.images[0]?.url
+      : "https://www.shutterstock.com/image-photo/lipstick-fashion-colorful-lipsticks-over-260nw-1017284011.jpg",
+  };
+  const [orderedProduct, setOrderedProduct] = useState(true);
+  const copyToClipboard = (text) => {
+    var textField = document.createElement("textarea");
+    textField.innerText = text;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand("copy");
+    textField.remove();
+  };
   return (
     <>
       <Meta title={"Product Name"} />
@@ -154,13 +183,16 @@ const SingleProduct = () => {
               <div className="border-bottom py-3">
                 <p className="price">$ {productState?.price}</p>
                 <ReactStars
-                  count={5}
+                  // count={5}
                   size={24}
-                  value={4}
+                  value={productState?.totalrating.toString()}
                   edit={false}
                   activeColor="#ffd700"
                 />
-                {/* <p className="mb-0 t-review">(4 Reviews)</p> */}
+
+                <p className="mb-0 t-review">
+                  ({productState?.ratings?.length} Review)
+                </p>
               </div>
               <a className="review-btn" href="#review">
                 Write a Review
@@ -293,11 +325,13 @@ const SingleProduct = () => {
                     <ReactStars
                       count={5}
                       size={24}
-                      value={productState?.totalratings}
+                      value={productState?.totalrating.toString()}
                       edit={false}
                       activeColor="#ffd700"
                     />
-                    <p className="mb-0">Based on 2 Reviews</p>
+                    <p className="mb-0">
+                      Total Reviews {productState?.ratings.length}
+                    </p>
                   </div>
                 </div>
                 {orderedProduct && (

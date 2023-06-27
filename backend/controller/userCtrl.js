@@ -226,26 +226,37 @@ const deleteaUser = asyncHandler(async (req, res) => {
 const updatedUser = asyncHandler(async (req, res) => {
   const { id } = req.user;
   validateMongoDbId(id);
-  // console.log(req.body);
+  
   try {
-    const updateaUser = await User.findByIdAndUpdate(
+    const updateFields = {
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      address: req.body.address,
+      profile: req.body.profile,
+    };
+
+    // Remove undefined fields
+    Object.keys(updateFields).forEach((key) => {
+      if (updateFields[key] === undefined) {
+        delete updateFields[key];
+      }
+    });
+
+    const updatedUser = await User.findByIdAndUpdate(
       id,
-      {
-        firstname: req?.body?.firstname,
-        lastname: req?.body?.lastname,
-        email: req?.body?.email,
-        address: req?.body?.address || [],
-        profile: req?.body?.profile,
-      },
+      updateFields,
       {
         new: true,
       }
     );
-    res.json(updateaUser);
+
+    res.json(updatedUser);
   } catch (error) {
     throw new Error(error);
   }
 });
+
 
 const updatePassword = asyncHandler(async (req, res) => {
   const { id } = req.user;
@@ -472,6 +483,7 @@ const createOrder = asyncHandler(async (req, res) => {
     totalPrice,
     totalPriceAfterDiscount,
     paymentInfo,
+    paymentStatus,
   } = req.body;
   console.log(req.body);
   const { id } = req.user;
@@ -510,6 +522,7 @@ const createOrder = asyncHandler(async (req, res) => {
     totalPrice,
     totalPriceAfterDiscount,
     paymentInfo,
+    paymentStatus,
     user: id,
   });
 
@@ -567,7 +580,10 @@ const updateOrder = asyncHandler(async (req, res) => {
 const getMyOrders = asyncHandler(async (req, res) => {
   const { id } = req.user;
   try {
-    const orders = await Order.find({ user: id, paymentStatus: "paid" })
+    const orders = await Order.find({
+      user: id,
+      paymentStatus: { $in: ["paid", "cash on delivery"] },
+    })
       .populate("user")
       .populate("orderItems.productId")
       .populate("orderItems.color");
@@ -581,7 +597,9 @@ const getMyOrders = asyncHandler(async (req, res) => {
 
 const getAllOrders = asyncHandler(async (req, res) => {
   try {
-    const orders = await Order.find({ paymentStatus: "paid" })
+    const orders = await Order.find({
+      paymentStatus: { $in: ["paid", "cash on delivery"] },
+    })
       .sort({ createdAt: -1 })
       .populate("user")
       .populate("orderItems.productId")
@@ -591,7 +609,6 @@ const getAllOrders = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
-
 
 /*const emptyCart = asyncHandler(async (req, res) => {
   const { id } = req.user;
@@ -712,7 +729,7 @@ const uploadProfilePic = asyncHandler(async (req, res) => {
   const { id } = req.user;
   validateMongoDbId(id);
   try {
-    // console.log(req.file);
+    console.log(req.file);
     const result = await cloudinary.uploader.upload(req.file.path);
     // console.log(result);
     const uri = result.secure_url;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-
+import { base_url } from "../utils/axiosConfig";
 import Meta from "../components/Meta";
 import ReactStars from "react-rating-stars-component";
 import MakeupCard from "../components/FaceMakeupCard";
@@ -9,7 +9,8 @@ import Container from "../components/Container";
 
 import axios from "axios";
 function SkincareRecommendation() {
-  const [resData, SetResdata] = useState([]);
+  const [resData, setFeatured] = useState([]);
+
   const [grid, setGrid] = useState(3);
   const dataa = [
     {
@@ -45,39 +46,24 @@ function SkincareRecommendation() {
   const data = location.state.data;
 
   console.log(data);
-  const handleGetRecommendations = async () => {
-    if (data) {
-      const res = await axios.post(
-        "http://localhost:5000/api/product/recommendations",
-        data
-      );
-      if (res.data.status == 200) {
-        toast.info(res.data.message);
-        SetResdata(res.data.data);
-      } else {
-        toast.error(res.data.message);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${base_url}product/get/featured`);
+
+        if (response.data?.status === 200) {
+          setFeatured(response.data.data);
+        } else {
+          setFeatured([]);
+        }
+      } catch (error) {
+        console.error("Error fetching featured products:", error);
       }
-      // console.log(res);
-    }
-  };
-
-  useEffect(() => {
-    handleGetRecommendations();
+    };
+    fetchData();
   }, []);
-  const handleRandomProducts = async () => {
-    const res = await axios.get("http://localhost:5000/api/product/random-products");
-    if (res.data.status == 200) {
-      // toast.info(res.data.message);
-      // SetResdata(res.data.data);
-    } else {
-      // toast.error(res.data.message);
-    }
-    // console.log(res);
-  };
 
-  useEffect(() => {
-    handleRandomProducts();
-  }, []);
   return (
     <>
       <Meta title={"Result"} />
@@ -96,47 +82,31 @@ function SkincareRecommendation() {
               <h3 className="filter-title"> Random Products </h3>
 
               <div>
-                <div className="random-products mb-3 d-flex gap-10">
-                  <div className="w-50">
-                    <img
-                      src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fG1ha2V1cHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-                      className="img-fluid"
-                      alt="Lipstick"
-                    />
+                {resData?.slice(0, 4)?.map((product) => (
+                  <div
+                    className="random-products mb-3 d-flex gap-10"
+                    key={product?._id}
+                  >
+                    <div className="w-50">
+                      <img
+                        src={product?.images[0]?.url} // Assuming the product image URL is stored in product.images[0].url
+                        className="img-fluid"
+                        alt={product?.title}
+                      />
+                    </div>
+                    <div className="w-50">
+                      <h5>{product?.title}</h5>
+                      <ReactStars
+                        count={5}
+                        value={product?.totalrating.toString()}
+                        edit={false}
+                        size={15}
+                        activeColor="#ffd700"
+                      />
+                      <p>${product?.price}</p>
+                    </div>
                   </div>
-                  <div className="w-50">
-                    <h5>Lorem Ipsum is simply dummy text. </h5>
-                    <ReactStars
-                      count={5}
-                      value="3"
-                      edit={false}
-                      size={15}
-                      activeColor="#ffd700"
-                    />
-                    <p>$200</p>
-                  </div>
-                </div>
-
-                <div className="random-products d-flex gap-10">
-                  <div className="w-50">
-                    <img
-                      src="https://st4.depositphotos.com/13349494/38194/i/600/depositphotos_381945002-stock-photo-top-view-eye-shadow-blush.jpg"
-                      className="img-fluid"
-                      alt="Lipstick"
-                    />
-                  </div>
-                  <div className="w-50">
-                    <h5>Lorem Ipsum is simply dummy text. </h5>
-                    <ReactStars
-                      count={5}
-                      value="3"
-                      edit={false}
-                      size={15}
-                      activeColor="#ffd700"
-                    />
-                    <p>$200</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>

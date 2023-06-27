@@ -27,14 +27,17 @@ const Orders = () => {
               <div className="col-3">
                 <h5>Order Id</h5>
               </div>
-              <div className="col-3">
+              <div className="col-2">
                 <h5>Total Amount</h5>
               </div>
-              <div className="col-3">
+              <div className="col-2">
                 <h5>Total Amount After Discount</h5>
               </div>
-              <div className="col-3">
+              <div className="col-2">
                 <h5>Status</h5>
+              </div>
+              <div className="col-2">
+                <h5>Order Status</h5>
               </div>
             </div>
             <div className="col-12 mt-3">
@@ -46,18 +49,24 @@ const Orders = () => {
                       className="row pt-3 my-3"
                       key={index}
                     >
-                      <div className="col-3">
-                        <p>{item._id}</p>
+                      <div className="row">
+                        <div className="col-3">
+                          <p>{item._id}</p>
+                        </div>
+                        <div className="col-2">
+                          <p>{item.totalPrice}</p>
+                        </div>
+                        <div className="col-2">
+                          <p>{item.totalPriceAfterDiscount}</p>
+                        </div>
+                        <div className="col-2">
+                          <p>{item.orderStatus}</p>
+                        </div>
+                        <div className="col-2">
+                          <p>{item.paymentStatus}</p>
+                        </div>
                       </div>
-                      <div className="col-3">
-                        <p>{item.totalPrice}</p>
-                      </div>
-                      <div className="col-3">
-                        <p>{item.totalPriceAfterDiscount}</p>
-                      </div>
-                      <div className="col-3">
-                        <p>{item.orderStatus}</p>
-                      </div>
+
                       <div className="col-12">
                         <div
                           className="row py-3"
